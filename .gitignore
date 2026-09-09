@@ -20,6 +20,9 @@
 # production
 /build
 
+# database (SQLite)
+/data
+
 # misc
 .DS_Store
 *.pem

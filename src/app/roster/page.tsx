@@ -1,0 +1,34 @@
+import { dbAll } from "@/lib/db";
+import type { Member } from "@/lib/types";
+import RosterClient from "@/components/RosterClient";
+import { getLang } from "@/lib/lang";
+import { translate as t } from "@/i18n/dictionaries";
+
+export const dynamic = "force-dynamic";
+
+export default async function RosterPage() {
+  const lang = await getLang();
+  const tr = (key: string) => t(lang, key);
+
+  const members = await dbAll<Member>(
+    `SELECT id, ign, role, pangkat, level, discord, joined_at, active
+     FROM members
+     ORDER BY CASE role
+       WHEN 'Ketua' THEN 1
+       WHEN 'Wakil' THEN 2
+       WHEN 'Pengurus' THEN 3
+       ELSE 4
+     END, level DESC`
+  );
+
+  return (
+    <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
+      <h1 className="text-3xl font-black sm:text-4xl">{tr("roster.title")}</h1>
+      <p className="mt-2 text-zinc-400">{tr("roster.subtitle")}</p>
+
+      <div className="mt-8">
+        <RosterClient members={members} lang={lang} />
+      </div>
+    </div>
+  );
+}
