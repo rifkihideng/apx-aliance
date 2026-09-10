@@ -51,7 +51,7 @@ export default function Navbar({ lang }: { lang: Lang }) {
         </Link>
 
         <div className="flex items-center gap-3">
-          <ul className="hidden gap-6 text-sm font-medium text-zinc-300 md:flex">
+          <ul className="hidden gap-6 text-sm font-medium text-zinc-300 lg:flex">
             {links.map((l) => (
               <li key={l.href}>
                 <Link
@@ -66,12 +66,12 @@ export default function Navbar({ lang }: { lang: Lang }) {
             ))}
           </ul>
           <LanguageToggle lang={lang} />
-          <div className="hidden md:block">
+          <div className="hidden xl:block">
             <PushSubscribe />
           </div>
           <Link
             href="/rekrut"
-            className="btn-primary hidden rounded-lg px-4 py-2 text-sm font-semibold text-zinc-950 md:inline-flex"
+            className="btn-primary hidden rounded-lg px-4 py-2 text-sm font-semibold text-zinc-950 lg:inline-flex"
           >
             {tr("nav.join")}
           </Link>
@@ -79,7 +79,7 @@ export default function Navbar({ lang }: { lang: Lang }) {
             type="button"
             aria-label={tr("nav.openMenu")}
             onClick={() => setOpen(!open)}
-            className="rounded-md border border-zinc-700 p-2 text-zinc-300 md:hidden"
+            className="rounded-md border border-zinc-700 p-2 text-zinc-300 lg:hidden"
           >
             {open ? "✕" : "☰"}
           </button>
@@ -87,7 +87,7 @@ export default function Navbar({ lang }: { lang: Lang }) {
       </nav>
 
       {open && (
-        <div className="border-t border-zinc-800 bg-zinc-950 px-4 pb-4 md:hidden">
+        <div className="border-t border-zinc-800 bg-zinc-950 px-4 pb-4 lg:hidden">
           <ul className="flex flex-col gap-2 pt-2 text-sm font-medium text-zinc-300">
             {links.map((l) => (
               <li key={l.href}>

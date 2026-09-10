@@ -37,16 +37,16 @@ export default function Countdown({
   ];
 
   return (
-    <div className="flex justify-center gap-3 sm:gap-4">
+    <div className="mx-auto grid w-full max-w-sm grid-cols-4 gap-2 sm:gap-3">
       {cells.map((cell) => (
         <div
           key={cell.label}
-          className="flex w-20 flex-col items-center rounded-xl border border-zinc-700 bg-zinc-950 px-3 py-4"
+          className="flex flex-col items-center rounded-xl border border-zinc-700 bg-zinc-950 px-1 py-3 sm:py-4"
         >
-          <span className="font-mono text-3xl font-black text-emerald-400 tabular-nums">
+          <span className="font-mono text-2xl font-black text-emerald-400 tabular-nums sm:text-3xl">
             {String(cell.value).padStart(2, "0")}
           </span>
-          <span className="mt-1 text-xs font-medium uppercase tracking-wider text-zinc-500">
+          <span className="mt-1 text-[10px] font-medium uppercase tracking-wider text-zinc-500 sm:text-xs">
             {cell.label}
           </span>
         </div>

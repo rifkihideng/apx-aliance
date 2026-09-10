@@ -50,7 +50,7 @@ export default async function Home() {
           <p className="animate-fade-up text-sm font-semibold uppercase tracking-widest text-emerald-400">
             {tr("home.tagline")}
           </p>
-          <h1 className="animate-fade-up mt-4 text-5xl font-black tracking-tight sm:text-7xl">
+          <h1 className="animate-fade-up mt-4 text-4xl font-black tracking-tight sm:text-6xl md:text-7xl">
             APX <span className="text-gradient">ALLIANCE</span>
           </h1>
           <p className="animate-fade-up mt-6 max-w-2xl text-lg text-zinc-400">

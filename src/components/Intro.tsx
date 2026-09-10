@@ -49,7 +49,7 @@ export default function Intro({ lang }: { lang: Lang }) {
         APX
       </div>
 
-      <p className="animate-fade-up text-2xl font-black tracking-[0.35em] text-zinc-100">
+      <p className="animate-fade-up text-xl font-black tracking-[0.2em] text-zinc-100 sm:text-2xl sm:tracking-[0.35em]">
         APX ALLIANCE
       </p>
 
