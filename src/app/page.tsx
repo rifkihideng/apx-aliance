@@ -5,6 +5,7 @@ import { translate as t, monthNames, type Lang } from "@/i18n/dictionaries";
 import Reveal from "@/components/Reveal";
 import Parallax from "@/components/Parallax";
 import Countdown from "@/components/Countdown";
+import Intro from "@/components/Intro";
 import { formatTimeZones } from "@/lib/time";
 
 export const dynamic = "force-dynamic";
@@ -25,6 +26,7 @@ export default async function Home() {
 
   return (
     <div>
+      <Intro lang={lang} />
       <section className="relative overflow-hidden border-b border-zinc-800 bg-zinc-950">
         <Parallax speed={0.35} className="pointer-events-none absolute -top-40 left-1/2">
           <div className="h-96 w-[42rem] -translate-x-1/2">

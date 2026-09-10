@@ -1,0 +1,66 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import type { Lang } from "@/i18n/dictionaries";
+
+const WORDS: Record<Lang, string[]> = {
+  id: ["Kekuatan", "Strategi", "Solidaritas", "Dominasi"],
+  en: ["Power", "Strategy", "Solidarity", "Dominance"],
+};
+
+export default function Intro({ lang }: { lang: Lang }) {
+  const [wordIndex, setWordIndex] = useState(0);
+  const [leaving, setLeaving] = useState(false);
+  const [gone, setGone] = useState(false);
+
+  useEffect(() => {
+    const words = WORDS[lang];
+    const wordTimer = setInterval(() => {
+      setWordIndex((i) => (i + 1) % words.length);
+    }, 600);
+
+    const leaveTimer = setTimeout(() => setLeaving(true), 2400);
+    const goneTimer = setTimeout(() => setGone(true), 3000);
+
+    return () => {
+      clearInterval(wordTimer);
+      clearTimeout(leaveTimer);
+      clearTimeout(goneTimer);
+    };
+  }, [lang]);
+
+  if (gone) return null;
+
+  const words = WORDS[lang];
+
+  return (
+    <div
+      className={`fixed inset-0 z-[100] flex flex-col items-center justify-center gap-7 bg-zinc-950 transition-opacity duration-500 ${
+        leaving ? "pointer-events-none opacity-0" : "opacity-100"
+      }`}
+      aria-hidden={leaving}
+    >
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 bg-[radial-gradient(640px_320px_at_50%_45%,rgba(16,185,129,0.16),transparent)]"
+      />
+
+      <div className="animate-fade-up flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-emerald-400 to-emerald-600 text-3xl font-black text-zinc-950 shadow-xl shadow-emerald-500/30">
+        APX
+      </div>
+
+      <p className="animate-fade-up text-2xl font-black tracking-[0.35em] text-zinc-100">
+        APX ALLIANCE
+      </p>
+
+      <div className="flex h-12 items-center overflow-hidden">
+        <span
+          key={wordIndex}
+          className="animate-word text-4xl font-black uppercase tracking-tight text-gradient"
+        >
+          {words[wordIndex]}
+        </span>
+      </div>
+    </div>
+  );
+}
