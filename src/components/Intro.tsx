@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import type { Lang } from "@/i18n/dictionaries";
 
 const WORDS: Record<Lang, string[]> = {
@@ -9,11 +10,18 @@ const WORDS: Record<Lang, string[]> = {
 };
 
 export default function Intro({ lang }: { lang: Lang }) {
+  const [mounted, setMounted] = useState(false);
   const [wordIndex, setWordIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
   const [gone, setGone] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+
     const words = WORDS[lang];
     const wordTimer = setInterval(() => {
       setWordIndex((i) => (i + 1) % words.length);
@@ -27,13 +35,13 @@ export default function Intro({ lang }: { lang: Lang }) {
       clearTimeout(leaveTimer);
       clearTimeout(goneTimer);
     };
-  }, [lang]);
+  }, [mounted, lang]);
 
-  if (gone) return null;
+  if (!mounted || gone) return null;
 
   const words = WORDS[lang];
 
-  return (
+  return createPortal(
     <div
       className={`fixed inset-0 z-[100] flex flex-col items-center justify-center gap-7 bg-zinc-950 transition-opacity duration-500 ${
         leaving ? "pointer-events-none opacity-0" : "opacity-100"
@@ -61,6 +69,7 @@ export default function Intro({ lang }: { lang: Lang }) {
           {words[wordIndex]}
         </span>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
