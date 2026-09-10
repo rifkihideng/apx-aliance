@@ -213,6 +213,26 @@ async function getNextEventText(lang: Lang): Promise<string> {
   }
 }
 
+function BotGlyph() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="h-3.5 w-3.5"
+    >
+      <rect x="4" y="8" width="16" height="12" rx="2" />
+      <path d="M12 8V4" />
+      <circle cx="12" cy="2.5" r="1" />
+      <path d="M9 14h.01" />
+      <path d="M15 14h.01" />
+    </svg>
+  );
+}
+
 export default function ChatBot({ lang }: { lang: Lang }) {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -265,44 +285,58 @@ export default function ChatBot({ lang }: { lang: Lang }) {
   return (
     <>
       {open && (
-        <div className="fixed bottom-24 right-4 z-50 flex w-[calc(100vw-2rem)] max-w-sm flex-col overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-950 shadow-2xl shadow-emerald-500/10 sm:right-6">
-          <div className="flex items-center gap-3 border-b border-zinc-800 bg-zinc-900/60 px-4 py-3">
-            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-500 font-black text-zinc-950">
-              APX
-            </span>
-            <div className="min-w-0">
-              <p className="text-sm font-bold text-zinc-100">APX Bot</p>
-              <p className="text-xs text-emerald-400">● Online</p>
+        <div className="animate-chat-in fixed bottom-24 right-4 z-50 flex w-[calc(100vw-2rem)] max-w-sm flex-col overflow-hidden rounded-3xl border border-zinc-800 bg-zinc-950 shadow-2xl shadow-black/60 ring-1 ring-emerald-500/10 sm:right-6">
+          <div className="relative overflow-hidden bg-gradient-to-r from-emerald-500 to-emerald-700 px-4 py-3.5">
+            <div className="pointer-events-none absolute -right-6 -top-10 h-28 w-28 rounded-full bg-white/10 blur-2xl" />
+            <div className="relative flex items-center gap-3">
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-zinc-950/90 text-xs font-black text-emerald-400 shadow">
+                APX
+              </span>
+              <div className="min-w-0">
+                <p className="text-sm font-bold text-white">APX Bot</p>
+                <p className="flex items-center gap-1.5 text-xs text-emerald-100">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-200" />
+                  {lang === "id" ? "Online" : "Online"}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setOpen(false)}
+                aria-label={lang === "id" ? "Tutup chat" : "Close chat"}
+                className="relative ml-auto flex h-8 w-8 items-center justify-center rounded-full text-white/80 transition-colors hover:bg-white/10 hover:text-white"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" className="h-4 w-4">
+                  <path d="M18 6 6 18" />
+                  <path d="m6 6 12 12" />
+                </svg>
+              </button>
             </div>
-            <button
-              type="button"
-              onClick={() => setOpen(false)}
-              aria-label={lang === "id" ? "Tutup chat" : "Close chat"}
-              className="ml-auto rounded-md p-1.5 text-zinc-400 transition-colors hover:bg-zinc-800 hover:text-zinc-100"
-            >
-              ✕
-            </button>
           </div>
 
-          <div ref={scrollRef} className="flex max-h-80 min-h-[16rem] flex-col gap-3 overflow-y-auto px-4 py-4">
+          <div ref={scrollRef} className="chat-scroll flex max-h-80 min-h-[17rem] flex-col gap-3 overflow-y-auto bg-zinc-950 px-4 py-4">
             {messages.map((m, i) => (
-              <div key={i} className={m.from === "user" ? "flex justify-end" : "flex justify-start"}>
+              <div key={i} className={`flex gap-2 ${m.from === "user" ? "justify-end" : "justify-start"}`}>
+                {m.from === "bot" && (
+                  <span className="mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-zinc-900 text-emerald-400 ring-1 ring-zinc-800">
+                    <BotGlyph />
+                  </span>
+                )}
                 <div
                   className={
                     m.from === "user"
-                      ? "max-w-[80%] rounded-2xl rounded-br-sm bg-emerald-500 px-3.5 py-2 text-sm text-zinc-950"
-                      : "max-w-[85%] rounded-2xl rounded-bl-sm border border-zinc-800 bg-zinc-900 px-3.5 py-2 text-sm text-zinc-200"
+                      ? "max-w-[80%] rounded-2xl rounded-br-md bg-gradient-to-br from-emerald-400 to-emerald-600 px-4 py-2.5 text-sm font-medium text-zinc-950 shadow-lg shadow-emerald-500/20"
+                      : "max-w-[80%] rounded-2xl rounded-bl-md border border-zinc-800 bg-zinc-900 px-4 py-2.5 text-sm text-zinc-200"
                   }
                 >
                   <p className="whitespace-pre-wrap leading-relaxed">{m.text}</p>
                   {m.links && m.links.length > 0 && (
-                    <div className="mt-2 flex flex-wrap gap-2">
+                    <div className="mt-2.5 flex flex-wrap gap-1.5">
                       {m.links.map((l) => (
                         <Link
                           key={l.href + l.label}
                           href={l.href}
                           onClick={() => setOpen(false)}
-                          className="rounded-md bg-emerald-500/10 px-2.5 py-1 text-xs font-semibold text-emerald-300 transition-colors hover:bg-emerald-500/20"
+                          className="rounded-full bg-emerald-500/15 px-3 py-1.5 text-xs font-semibold text-emerald-300 ring-1 ring-inset ring-emerald-500/20 transition-colors hover:bg-emerald-500/25"
                         >
                           {l.label} →
                         </Link>
@@ -314,21 +348,26 @@ export default function ChatBot({ lang }: { lang: Lang }) {
             ))}
 
             {typing && (
-              <div className="flex justify-start">
-                <div className="rounded-2xl rounded-bl-sm border border-zinc-800 bg-zinc-900 px-4 py-2.5">
-                  <span className="animate-pulse text-sm text-zinc-400">...</span>
+              <div className="flex gap-2">
+                <span className="mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-zinc-900 text-emerald-400 ring-1 ring-zinc-800">
+                  <BotGlyph />
+                </span>
+                <div className="flex items-center gap-1 rounded-2xl rounded-bl-md border border-zinc-800 bg-zinc-900 px-4 py-3.5">
+                  <span className="typing-dot" />
+                  <span className="typing-dot" />
+                  <span className="typing-dot" />
                 </div>
               </div>
             )}
 
             {messages.length > 0 && !typing && (
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-1.5 pt-1">
                 {QUICK_REPLIES[lang].map((q) => (
                   <button
                     key={q}
                     type="button"
                     onClick={() => send(q)}
-                    className="rounded-full border border-zinc-700 px-3 py-1.5 text-xs text-zinc-300 transition-colors hover:border-emerald-400 hover:text-emerald-400"
+                    className="rounded-full border border-zinc-700/80 bg-zinc-900/60 px-3 py-1.5 text-xs text-zinc-300 transition-colors hover:border-emerald-400 hover:bg-emerald-500/10 hover:text-emerald-300"
                   >
                     {q}
                   </button>
@@ -337,20 +376,23 @@ export default function ChatBot({ lang }: { lang: Lang }) {
             )}
           </div>
 
-          <form onSubmit={handleSubmit} className="flex items-center gap-2 border-t border-zinc-800 bg-zinc-900/60 px-3 py-2.5">
+          <form onSubmit={handleSubmit} className="flex items-center gap-2 border-t border-zinc-800 bg-zinc-900/60 px-3 py-3">
             <input
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder={lang === "id" ? "Tulis pesan..." : "Type a message..."}
-              className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm text-zinc-100 placeholder-zinc-500 outline-none focus:border-emerald-400"
+              className="w-full rounded-full border border-zinc-700 bg-zinc-950 px-4 py-2.5 text-sm text-zinc-100 placeholder-zinc-500 outline-none transition-colors focus:border-emerald-400 focus:ring-2 focus:ring-emerald-500/20"
             />
             <button
               type="submit"
               disabled={!input.trim() || typing}
               aria-label={lang === "id" ? "Kirim" : "Send"}
-              className="shrink-0 rounded-lg bg-emerald-500 px-3.5 py-2 text-sm font-semibold text-zinc-950 transition-colors hover:bg-emerald-400 disabled:opacity-50"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 text-zinc-950 shadow-lg shadow-emerald-500/30 transition-transform hover:scale-105 disabled:opacity-40 disabled:hover:scale-100"
             >
-              ➤
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+                <path d="m22 2-7 20-4-9-9-4Z" />
+                <path d="M22 2 11 13" />
+              </svg>
             </button>
           </form>
         </div>
@@ -360,8 +402,14 @@ export default function ChatBot({ lang }: { lang: Lang }) {
         type="button"
         onClick={() => setOpen((o) => !o)}
         aria-label={open ? (lang === "id" ? "Tutup chat" : "Close chat") : lang === "id" ? "Buka chat bot" : "Open chat bot"}
-        className="fixed bottom-6 right-4 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-500 text-zinc-950 shadow-lg shadow-emerald-500/30 transition-transform hover:scale-105 sm:right-6"
+        className="group fixed bottom-6 right-4 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 text-zinc-950 shadow-xl shadow-emerald-500/40 transition-transform hover:scale-110 sm:right-6"
       >
+        {!open && (
+          <span className="absolute -right-0.5 -top-0.5 flex h-3.5 w-3.5">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+            <span className="relative inline-flex h-3.5 w-3.5 rounded-full border-2 border-zinc-950 bg-emerald-400" />
+          </span>
+        )}
         {open ? (
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" className="h-6 w-6">
             <path d="M18 6 6 18" />
