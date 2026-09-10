@@ -3,7 +3,14 @@ export const ADMIN_COOKIE = "apx_admin";
 const DEFAULT_PASSWORD = "apx2026";
 
 function getPassword(): string {
-  return process.env.ADMIN_PASSWORD || DEFAULT_PASSWORD;
+  const password = process.env.ADMIN_PASSWORD;
+  if (!password) {
+    if (process.env.NODE_ENV === "production") {
+      throw new Error("ADMIN_PASSWORD belum di-set di environment.");
+    }
+    return DEFAULT_PASSWORD; // fallback hanya untuk development
+  }
+  return password;
 }
 
 export function verifyAdminPassword(password: string): boolean {

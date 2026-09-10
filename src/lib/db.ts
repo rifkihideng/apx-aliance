@@ -201,9 +201,44 @@ async function initDb(): Promise<void> {
   await seedExtras(db);
 }
 
+const DB_RETRY_ATTEMPTS = 3;
+
+function isConnectionError(error: unknown): boolean {
+  if (!(error instanceof Error)) return false;
+  const cause = (error as Error & { cause?: unknown }).cause;
+  const text = `${error.message} ${cause instanceof Error ? cause.message : ""}`.toLowerCase();
+  return (
+    text.includes("fetch failed") ||
+    text.includes("timeout") ||
+    text.includes("connection") ||
+    text.includes("econnrefused") ||
+    text.includes("enetunreach")
+  );
+}
+
+async function withDbRetry<T>(fn: () => Promise<T>): Promise<T> {
+  let lastError: unknown;
+  for (let attempt = 0; attempt < DB_RETRY_ATTEMPTS; attempt++) {
+    try {
+      return await fn();
+    } catch (error) {
+      lastError = error;
+      if (!isConnectionError(error) || attempt === DB_RETRY_ATTEMPTS - 1) {
+        throw error;
+      }
+      await new Promise((resolve) => setTimeout(resolve, 500 * (attempt + 1)));
+    }
+  }
+  throw lastError;
+}
+
 async function ensureDb(): Promise<void> {
   if (!globalForDb._apxInit) {
-    globalForDb._apxInit = initDb();
+    globalForDb._apxInit = initDb().catch((error) => {
+      // Jangan simpan init yang gagal, supaya request berikutnya mencoba ulang.
+      globalForDb._apxInit = undefined;
+      throw error;
+    });
   }
   await globalForDb._apxInit;
 }
@@ -212,10 +247,12 @@ export async function dbAll<T = Record<string, unknown>>(
   sql: string,
   ...params: unknown[]
 ): Promise<T[]> {
-  await ensureDb();
-  const res = await getDb().execute({ sql, args: params as never[] });
-  // libsql mengembalikan Row yang bersifat array-like; ubah ke objek biasa.
-  return res.rows.map((r) => ({ ...r })) as unknown as T[];
+  return withDbRetry(async () => {
+    await ensureDb();
+    const res = await getDb().execute({ sql, args: params as never[] });
+    // libsql mengembalikan Row yang bersifat array-like; ubah ke objek biasa.
+    return res.rows.map((r) => ({ ...r })) as unknown as T[];
+  });
 }
 
 export async function dbGet<T = Record<string, unknown>>(
@@ -230,9 +267,11 @@ export async function dbRun(
   sql: string,
   ...params: unknown[]
 ): Promise<{ lastInsertRowid: number; changes: number }> {
-  await ensureDb();
-  const res = await getDb().execute({ sql, args: params as never[] });
-  return { lastInsertRowid: Number(res.lastInsertRowid), changes: Number(res.rowsAffected) };
+  return withDbRetry(async () => {
+    await ensureDb();
+    const res = await getDb().execute({ sql, args: params as never[] });
+    return { lastInsertRowid: Number(res.lastInsertRowid), changes: Number(res.rowsAffected) };
+  });
 }
 
 export async function getSetting(key: string): Promise<string> {

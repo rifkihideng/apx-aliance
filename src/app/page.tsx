@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { dbGet } from "@/lib/db";
 import { getLang } from "@/lib/lang";
-import { translate as t } from "@/i18n/dictionaries";
+import { translate as t, monthNames, type Lang } from "@/i18n/dictionaries";
 import Reveal from "@/components/Reveal";
 import Parallax from "@/components/Parallax";
+import Countdown from "@/components/Countdown";
+import { formatTimeZones } from "@/lib/time";
 
 export const dynamic = "force-dynamic";
 
@@ -13,6 +15,9 @@ export default async function Home() {
 
   const total = (await dbGet<{ c: number }>("SELECT COUNT(*) AS c FROM members"))?.c ?? 0;
   const aktif = (await dbGet<{ c: number }>("SELECT COUNT(*) AS c FROM members WHERE active = 1"))?.c ?? 0;
+  const nextEvent = await dbGet<{ title: string; event_date: string; event_time: string | null }>(
+    "SELECT title, event_date, event_time FROM events WHERE date(event_date) >= date('now', 'localtime') ORDER BY event_date ASC, event_time ASC LIMIT 1"
+  );
 
   return (
     <div>
@@ -68,6 +73,39 @@ export default async function Home() {
         </Reveal>
       </section>
 
+      {nextEvent && (
+        <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
+          <Reveal>
+            <div className="card-lift rounded-xl border border-zinc-800 bg-zinc-900/50 p-8 text-center">
+              <p className="text-sm font-semibold uppercase tracking-widest text-emerald-400">
+                {tr("home.countdown.title")}
+              </p>
+              <h2 className="mt-2 text-2xl font-bold sm:text-3xl">{nextEvent.title}</h2>
+              <p className="mt-1 text-sm text-zinc-400">
+                {formatEventDate(nextEvent.event_date, lang)}
+              </p>
+              {nextEvent.event_time && (
+                <p className="mt-1 text-xs text-zinc-500">
+                  {formatTimeZones(nextEvent.event_time)}
+                </p>
+              )}
+              <div className="mt-6">
+                <Countdown
+                  date={nextEvent.event_date}
+                  time={nextEvent.event_time}
+                  labels={{
+                    days: tr("home.countdown.days"),
+                    hours: tr("home.countdown.hours"),
+                    mins: tr("home.countdown.mins"),
+                    secs: tr("home.countdown.secs"),
+                  }}
+                />
+              </div>
+            </div>
+          </Reveal>
+        </section>
+      )}
+
       <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
         <h2 className="text-2xl font-bold sm:text-3xl">{tr("home.why")}</h2>
         <div className="mt-8 grid gap-6 md:grid-cols-3">
@@ -84,6 +122,12 @@ export default async function Home() {
       </section>
     </div>
   );
+}
+
+function formatEventDate(date: string, lang: Lang) {
+  const [y, m, d] = date.split("-");
+  const month = monthNames[lang][Number(m) - 1] ?? m;
+  return `${Number(d)} ${month} ${y}`;
 }
 
 function Stat({ label, value, icon }: { label: string; value: string | number; icon: React.ReactNode }) {

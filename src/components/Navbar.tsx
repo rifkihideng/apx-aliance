@@ -13,6 +13,7 @@ const links = [
   { href: "/berita", key: "nav.berita" },
   { href: "/jadwal", key: "nav.jadwal" },
   { href: "/aturan", key: "nav.aturan" },
+  { href: "/faq", key: "nav.faq" },
   { href: "/admin", key: "nav.admin" },
 ];
 

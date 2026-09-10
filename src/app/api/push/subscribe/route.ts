@@ -1,7 +1,17 @@
 import { NextResponse } from "next/server";
 import { dbRun } from "@/lib/db";
+import { getClientIp, rateLimit } from "@/lib/rate-limit";
 
 export async function POST(request: Request) {
+  const ip = getClientIp(request);
+  const rl = rateLimit(`push-sub:${ip}`, 20, 10 * 60 * 1000);
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { ok: false, error: "Terlalu banyak permintaan. Coba lagi nanti." },
+      { status: 429, headers: { "Retry-After": String(rl.retryAfter ?? 600) } }
+    );
+  }
+
   let body: Record<string, unknown>;
   try {
     body = await request.json();
@@ -32,6 +42,15 @@ export async function POST(request: Request) {
 }
 
 export async function DELETE(request: Request) {
+  const ip = getClientIp(request);
+  const rl = rateLimit(`push-unsub:${ip}`, 20, 10 * 60 * 1000);
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { ok: false, error: "Terlalu banyak permintaan. Coba lagi nanti." },
+      { status: 429, headers: { "Retry-After": String(rl.retryAfter ?? 600) } }
+    );
+  }
+
   let body: Record<string, unknown>;
   try {
     body = await request.json();

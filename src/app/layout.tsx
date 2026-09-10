@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import CursorGlow from "@/components/CursorGlow";
 import { getLang } from "@/lib/lang";
+import { getSiteUrl } from "@/lib/site";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,11 +18,26 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(getSiteUrl()),
   title: {
     default: "APX Alliance — Narco Empire",
     template: "%s | APX Alliance",
   },
   description: "Website resmi aliansi APX di game Narco Empire.",
+  openGraph: {
+    type: "website",
+    locale: "id_ID",
+    url: "/",
+    siteName: "APX Alliance",
+    title: "APX Alliance — Narco Empire",
+    description: "Website resmi aliansi APX di game Narco Empire.",
+    images: ["/opengraph-image"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "APX Alliance — Narco Empire",
+    description: "Website resmi aliansi APX di game Narco Empire.",
+  },
 };
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {

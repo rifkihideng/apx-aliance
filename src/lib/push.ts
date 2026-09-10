@@ -2,14 +2,20 @@ import webpush from "web-push";
 import { dbAll, dbRun } from "@/lib/db";
 import { VAPID_PUBLIC_KEY } from "@/lib/push-config";
 
-const VAPID_PRIVATE_KEY =
-  "qli8SqrobzJZbY3tHuE2WHLb5A70k5SyMnwle4eJrT4";
+let vapidReady = false;
 
-webpush.setVapidDetails(
-  "mailto:admin@apx-alliance.local",
-  VAPID_PUBLIC_KEY,
-  VAPID_PRIVATE_KEY
-);
+function ensureVapid(): boolean {
+  if (vapidReady) return true;
+  const privateKey = process.env.VAPID_PRIVATE_KEY;
+  if (!privateKey) return false;
+  webpush.setVapidDetails(
+    process.env.VAPID_SUBJECT ?? "mailto:admin@apx-alliance.local",
+    VAPID_PUBLIC_KEY,
+    privateKey
+  );
+  vapidReady = true;
+  return true;
+}
 
 type PushSubscriptionRow = {
   endpoint: string;
@@ -18,6 +24,11 @@ type PushSubscriptionRow = {
 };
 
 export async function sendPushToAll(title: string, body: string, url: string): Promise<number> {
+  if (!ensureVapid()) {
+    console.warn("VAPID_PRIVATE_KEY belum di-set; notifikasi push dilewati.");
+    return 0;
+  }
+
   const subs = await dbAll<PushSubscriptionRow>(
     "SELECT endpoint, p256dh, auth FROM push_subscriptions"
   );

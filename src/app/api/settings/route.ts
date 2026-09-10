@@ -27,6 +27,9 @@ export async function POST(request: Request) {
   }
 
   const link = String(body.wa_group_link ?? "").trim();
+  if (link && !/^https:\/\//i.test(link)) {
+    return NextResponse.json({ ok: false, error: "Link grup harus berupa URL https." }, { status: 400 });
+  }
   await setSetting("wa_group_link", link);
 
   return NextResponse.json({ ok: true });
