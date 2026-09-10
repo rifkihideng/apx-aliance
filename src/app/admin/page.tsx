@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { dbGet } from "@/lib/db";
+import { getLang } from "@/lib/lang";
+import { translate as t } from "@/i18n/dictionaries";
 import AdminShell from "@/components/AdminShell";
 import ApplicationsManager from "@/components/ApplicationsManager";
 import WaLinkSettings from "@/components/WaLinkSettings";
@@ -7,6 +9,9 @@ import WaLinkSettings from "@/components/WaLinkSettings";
 export const dynamic = "force-dynamic";
 
 export default async function AdminPage() {
+  const lang = await getLang();
+  const tr = (key: string) => t(lang, key);
+
   const totalMembers = (await dbGet<{ c: number }>("SELECT COUNT(*) AS c FROM members"))?.c ?? 0;
   const activeMembers = (await dbGet<{ c: number }>("SELECT COUNT(*) AS c FROM members WHERE active = 1"))?.c ?? 0;
   const pendingApps = (await dbGet<{ c: number }>("SELECT COUNT(*) AS c FROM applications WHERE status = 'pending'"))?.c ?? 0;
@@ -17,16 +22,16 @@ export default async function AdminPage() {
   return (
     <AdminShell>
       <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6">
-        <h1 className="text-3xl font-black sm:text-4xl">Panel Admin</h1>
-        <p className="mt-2 text-zinc-400">Ringkasan dan pengelolaan aliansi APX.</p>
+        <h1 className="text-3xl font-black sm:text-4xl">{tr("admin.dashboard.title")}</h1>
+        <p className="mt-2 text-zinc-400">{tr("admin.dashboard.subtitle")}</p>
 
         <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-3">
-          <StatCard label="Total Member" value={totalMembers} />
-          <StatCard label="Member Aktif" value={activeMembers} />
-          <StatCard label="Pendaftar Pending" value={pendingApps} />
-          <StatCard label="Berita" value={totalNews} />
-          <StatCard label="Jadwal" value={totalEvents} />
-          <StatCard label="Notifikasi Aktif" value={pushSubs} />
+          <StatCard label={tr("admin.dashboard.totalMembers")} value={totalMembers} />
+          <StatCard label={tr("admin.dashboard.activeMembers")} value={activeMembers} />
+          <StatCard label={tr("admin.dashboard.pendingApps")} value={pendingApps} />
+          <StatCard label={tr("admin.dashboard.news")} value={totalNews} />
+          <StatCard label={tr("admin.dashboard.schedule")} value={totalEvents} />
+          <StatCard label={tr("admin.dashboard.pushSubs")} value={pushSubs} />
         </div>
 
         <div className="mt-6 flex flex-wrap gap-3">
@@ -34,28 +39,28 @@ export default async function AdminPage() {
             href="/admin/member"
             className="rounded-lg bg-emerald-500 px-5 py-2 font-semibold text-zinc-950 transition-colors hover:bg-emerald-400"
           >
-            Kelola Member
+            {tr("admin.dashboard.manageMembers")}
           </Link>
           <Link
             href="/admin/berita"
             className="rounded-lg border border-zinc-700 px-5 py-2 font-semibold text-zinc-200 transition-colors hover:border-emerald-400 hover:text-emerald-400"
           >
-            Kelola Berita
+            {tr("admin.dashboard.manageNews")}
           </Link>
           <Link
             href="/admin/jadwal"
             className="rounded-lg border border-zinc-700 px-5 py-2 font-semibold text-zinc-200 transition-colors hover:border-emerald-400 hover:text-emerald-400"
           >
-            Kelola Jadwal
+            {tr("admin.dashboard.manageSchedule")}
           </Link>
         </div>
 
-        <WaLinkSettings />
+        <WaLinkSettings lang={lang} />
 
-        <h2 className="mt-10 text-xl font-bold">Daftar Pendaftar</h2>
-        <p className="mt-1 text-sm text-zinc-400">Terima atau tolak pendaftaran member.</p>
+        <h2 className="mt-10 text-xl font-bold">{tr("admin.dashboard.applications")}</h2>
+        <p className="mt-1 text-sm text-zinc-400">{tr("admin.dashboard.applicationsDesc")}</p>
         <div className="mt-4">
-          <ApplicationsManager />
+          <ApplicationsManager lang={lang} />
         </div>
       </div>
     </AdminShell>

@@ -25,7 +25,7 @@ export default function Navbar({ lang }: { lang: Lang }) {
     <header className="sticky top-0 z-50 border-b border-zinc-800 bg-zinc-950/80 shadow-lg shadow-emerald-500/5 backdrop-blur">
       <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
         <Link href="/" className="flex items-center gap-2">
-          <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-500 font-black text-zinc-950">
+          <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-400 to-emerald-600 font-black text-zinc-950 shadow-lg shadow-emerald-500/30">
             APX
           </span>
           <span className="text-lg font-bold tracking-wide">APX Alliance</span>

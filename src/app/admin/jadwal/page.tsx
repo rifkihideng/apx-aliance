@@ -1,12 +1,19 @@
+import type { Metadata } from "next";
 import EventManager from "@/components/EventManager";
 import AdminShell from "@/components/AdminShell";
+import { getLang } from "@/lib/lang";
+import { translate as t } from "@/i18n/dictionaries";
 
-export const metadata = { title: "Kelola Jadwal" };
+export async function generateMetadata(): Promise<Metadata> {
+  const lang = await getLang();
+  return { title: t(lang, "admin.schedule.title") };
+}
 
-export default function AdminJadwalPage() {
+export default async function AdminJadwalPage() {
+  const lang = await getLang();
   return (
     <AdminShell>
-      <EventManager />
+      <EventManager lang={lang} />
     </AdminShell>
   );
 }

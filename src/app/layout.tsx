@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import CursorGlow from "@/components/CursorGlow";
+import ChatBot from "@/components/ChatBot";
 import { getLang } from "@/lib/lang";
 import { getSiteUrl } from "@/lib/site";
 
@@ -54,6 +55,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         <Navbar lang={lang} />
         <main className="flex-1">{children}</main>
         <Footer lang={lang} />
+        <ChatBot lang={lang} />
       </body>
     </html>
   );

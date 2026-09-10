@@ -1,12 +1,19 @@
+import type { Metadata } from "next";
 import MemberManager from "@/components/MemberManager";
 import AdminShell from "@/components/AdminShell";
+import { getLang } from "@/lib/lang";
+import { translate as t } from "@/i18n/dictionaries";
 
-export const metadata = { title: "Kelola Member" };
+export async function generateMetadata(): Promise<Metadata> {
+  const lang = await getLang();
+  return { title: t(lang, "admin.member.title") };
+}
 
-export default function AdminMemberPage() {
+export default async function AdminMemberPage() {
+  const lang = await getLang();
   return (
     <AdminShell>
-      <MemberManager />
+      <MemberManager lang={lang} />
     </AdminShell>
   );
 }

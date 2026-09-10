@@ -1,8 +1,9 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { translate as t, type Lang } from "@/i18n/dictionaries";
 
-export default function AdminLogoutButton() {
+export default function AdminLogoutButton({ lang }: { lang: Lang }) {
   const router = useRouter();
 
   async function logout() {
@@ -17,7 +18,7 @@ export default function AdminLogoutButton() {
       onClick={logout}
       className="rounded-md border border-zinc-700 px-3 py-1.5 text-xs font-semibold text-zinc-300 transition-colors hover:border-red-500 hover:text-red-400"
     >
-      Logout
+      {t(lang, "admin.logout")}
     </button>
   );
 }

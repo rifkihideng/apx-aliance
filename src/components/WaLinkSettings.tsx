@@ -1,8 +1,11 @@
 "use client";
 
 import { useEffect, useState, type FormEvent } from "react";
+import { translate as t, type Lang } from "@/i18n/dictionaries";
 
-export default function WaLinkSettings() {
+export default function WaLinkSettings({ lang }: { lang: Lang }) {
+  const tr = (key: string) => t(lang, key);
+
   const [link, setLink] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -30,10 +33,10 @@ export default function WaLinkSettings() {
         body: JSON.stringify({ wa_group_link: link }),
       });
       const json = await res.json();
-      if (!res.ok || !json.ok) throw new Error(json.error ?? "Gagal.");
-      setMessage("Link tersimpan. ✅");
+      if (!res.ok || !json.ok) throw new Error(json.error ?? tr("admin.wa.fail"));
+      setMessage(tr("admin.wa.saved"));
     } catch (err) {
-      setMessage(err instanceof Error ? err.message : "Gagal menyimpan.");
+      setMessage(err instanceof Error ? err.message : tr("admin.wa.fail"));
     } finally {
       setSaving(false);
     }
@@ -44,9 +47,9 @@ export default function WaLinkSettings() {
       onSubmit={save}
       className="mt-6 rounded-xl border border-zinc-800 bg-zinc-900/50 p-5"
     >
-      <h2 className="text-lg font-semibold">Pengaturan</h2>
+      <h2 className="text-lg font-semibold">{tr("admin.wa.title")}</h2>
       <p className="mt-1 text-sm text-zinc-400">
-        Link grup WhatsApp akan otomatis dikirim ke pendaftar yang disetujui.
+        {tr("admin.wa.desc")}
       </p>
 
       <div className="mt-3 flex flex-col gap-2 sm:flex-row">
@@ -63,7 +66,7 @@ export default function WaLinkSettings() {
           disabled={saving || loading}
           className="shrink-0 rounded-lg bg-emerald-500 px-5 py-2 text-sm font-semibold text-zinc-950 transition-colors hover:bg-emerald-400 disabled:opacity-60"
         >
-          {saving ? "Menyimpan..." : "Simpan"}
+          {saving ? tr("admin.wa.saving") : tr("admin.wa.save")}
         </button>
       </div>
 

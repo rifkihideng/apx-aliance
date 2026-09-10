@@ -2,6 +2,7 @@
 
 import { useEffect, useState, type FormEvent } from "react";
 import type { Member } from "@/lib/types";
+import { translate as t, type Lang } from "@/i18n/dictionaries";
 
 const ROLES = ["Ketua", "Wakil", "Pengurus", "Member"];
 
@@ -25,7 +26,9 @@ const emptyForm: FormState = {
   joined_at: "",
 };
 
-export default function MemberManager() {
+export default function MemberManager({ lang }: { lang: Lang }) {
+  const tr = (key: string, vars?: Record<string, string | number>) => t(lang, key, vars);
+
   const [members, setMembers] = useState<Member[]>([]);
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState<FormState>(emptyForm);
@@ -92,27 +95,27 @@ export default function MemberManager() {
             body: JSON.stringify(payload),
           });
       const json = await res.json();
-      if (!res.ok || !json.ok) throw new Error(json.error ?? "Terjadi kesalahan.");
-      setMessage(form.id ? "Member berhasil diperbarui." : "Member berhasil ditambahkan.");
+      if (!res.ok || !json.ok) throw new Error(json.error ?? tr("admin.member.error"));
+      setMessage(form.id ? tr("admin.member.updated") : tr("admin.member.added"));
       resetForm();
       await load();
     } catch (err) {
-      setMessage(err instanceof Error ? err.message : "Terjadi kesalahan.");
+      setMessage(err instanceof Error ? err.message : tr("admin.member.error"));
     } finally {
       setSaving(false);
     }
   }
 
   async function handleDelete(id: number, ign: string) {
-    if (!window.confirm(`Hapus member "${ign}"?`)) return;
+    if (!window.confirm(tr("admin.member.confirmDelete", { name: ign }))) return;
     try {
       const res = await fetch(`/api/members/${id}`, { method: "DELETE" });
       const json = await res.json();
-      if (!res.ok || !json.ok) throw new Error(json.error ?? "Gagal menghapus.");
-      setMessage("Member berhasil dihapus.");
+      if (!res.ok || !json.ok) throw new Error(json.error ?? tr("admin.member.deleteFail"));
+      setMessage(tr("admin.member.deleted"));
       await load();
     } catch (err) {
-      setMessage(err instanceof Error ? err.message : "Gagal menghapus.");
+      setMessage(err instanceof Error ? err.message : tr("admin.member.deleteFail"));
     }
   }
 
@@ -121,8 +124,8 @@ export default function MemberManager() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
-      <h1 className="text-3xl font-black sm:text-4xl">Kelola Member</h1>
-      <p className="mt-2 text-zinc-400">Tambah, edit, atau hapus member aliansi APX.</p>
+      <h1 className="text-3xl font-black sm:text-4xl">{tr("admin.member.title")}</h1>
+      <p className="mt-2 text-zinc-400">{tr("admin.member.subtitle")}</p>
 
       <form
         onSubmit={handleSubmit}
@@ -130,7 +133,7 @@ export default function MemberManager() {
       >
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-semibold">
-            {form.id ? "Edit Member" : "Tambah Member"}
+            {form.id ? tr("admin.member.edit") : tr("admin.member.add")}
           </h2>
           {form.id && (
             <button
@@ -138,24 +141,24 @@ export default function MemberManager() {
               onClick={resetForm}
               className="rounded-md border border-zinc-700 px-3 py-1 text-xs text-zinc-300 hover:border-emerald-400 hover:text-emerald-400"
             >
-              Batal Edit
+              {tr("admin.member.cancelEdit")}
             </button>
           )}
         </div>
 
         <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           <label className="block">
-            <span className="mb-1 block text-sm font-medium text-zinc-300">IGN</span>
+            <span className="mb-1 block text-sm font-medium text-zinc-300">{tr("admin.member.ign")}</span>
             <input
               className={inputCls}
               value={form.ign}
               onChange={(e) => update("ign", e.target.value)}
-              placeholder="Contoh: Apx.Nova"
+              placeholder={tr("admin.member.ignPh")}
               required
             />
           </label>
           <label className="block">
-            <span className="mb-1 block text-sm font-medium text-zinc-300">Role</span>
+            <span className="mb-1 block text-sm font-medium text-zinc-300">{tr("admin.member.role")}</span>
             <select
               className={inputCls}
               value={form.role}
@@ -169,35 +172,35 @@ export default function MemberManager() {
             </select>
           </label>
           <label className="block">
-            <span className="mb-1 block text-sm font-medium text-zinc-300">Pangkat</span>
+            <span className="mb-1 block text-sm font-medium text-zinc-300">{tr("admin.member.rank")}</span>
             <input
               className={inputCls}
               value={form.pangkat}
               onChange={(e) => update("pangkat", e.target.value)}
-              placeholder="Contoh: R4"
+              placeholder={tr("admin.member.rankPh")}
             />
           </label>
           <label className="block">
-            <span className="mb-1 block text-sm font-medium text-zinc-300">Level</span>
+            <span className="mb-1 block text-sm font-medium text-zinc-300">{tr("admin.member.level")}</span>
             <input
               className={inputCls}
               type="number"
               value={form.level}
               onChange={(e) => update("level", e.target.value)}
-              placeholder="Contoh: 150"
+              placeholder={tr("admin.member.levelPh")}
             />
           </label>
           <label className="block">
-            <span className="mb-1 block text-sm font-medium text-zinc-300">Discord</span>
+            <span className="mb-1 block text-sm font-medium text-zinc-300">{tr("admin.member.discord")}</span>
             <input
               className={inputCls}
               value={form.discord}
               onChange={(e) => update("discord", e.target.value)}
-              placeholder="Contoh: apxnova"
+              placeholder={tr("admin.member.discordPh")}
             />
           </label>
           <label className="block">
-            <span className="mb-1 block text-sm font-medium text-zinc-300">Bergabung</span>
+            <span className="mb-1 block text-sm font-medium text-zinc-300">{tr("admin.member.joined")}</span>
             <input
               className={inputCls}
               value={form.joined_at}
@@ -214,24 +217,24 @@ export default function MemberManager() {
           disabled={saving}
           className="mt-4 rounded-lg bg-emerald-500 px-5 py-2 font-semibold text-zinc-950 transition-colors hover:bg-emerald-400 disabled:opacity-60"
         >
-          {saving ? "Menyimpan..." : form.id ? "Simpan Perubahan" : "Tambah Member"}
+          {saving ? tr("admin.member.saving") : form.id ? tr("admin.member.save") : tr("admin.member.addBtn")}
         </button>
       </form>
 
       <div className="mt-10">
-        <h2 className="text-lg font-semibold">Daftar Member ({members.length})</h2>
+        <h2 className="text-lg font-semibold">{tr("admin.member.list")} ({members.length})</h2>
         {loading ? (
-          <p className="mt-4 text-zinc-400">Memuat...</p>
+          <p className="mt-4 text-zinc-400">{tr("admin.member.loading")}</p>
         ) : (
           <div className="mt-4 overflow-x-auto rounded-xl border border-zinc-800">
             <table className="w-full text-left text-sm">
               <thead className="bg-zinc-900 text-zinc-400">
                 <tr>
-                  <th className="px-4 py-3 font-medium">IGN</th>
-                  <th className="px-4 py-3 font-medium">Role</th>
-                  <th className="px-4 py-3 font-medium">Pangkat</th>
-                  <th className="px-4 py-3 font-medium">Level</th>
-                  <th className="px-4 py-3 font-medium text-right">Aksi</th>
+                  <th className="px-4 py-3 font-medium">{tr("admin.member.ign")}</th>
+                  <th className="px-4 py-3 font-medium">{tr("admin.member.role")}</th>
+                  <th className="px-4 py-3 font-medium">{tr("admin.member.rank")}</th>
+                  <th className="px-4 py-3 font-medium">{tr("admin.member.level")}</th>
+                  <th className="px-4 py-3 font-medium text-right">{tr("admin.member.action")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -247,14 +250,14 @@ export default function MemberManager() {
                         onClick={() => startEdit(m)}
                         className="rounded-md border border-zinc-700 px-3 py-1 text-xs text-zinc-300 hover:border-emerald-400 hover:text-emerald-400"
                       >
-                        Edit
+                        {tr("admin.member.editBtn")}
                       </button>
                       <button
                         type="button"
                         onClick={() => handleDelete(m.id, m.ign)}
                         className="ml-2 rounded-md border border-zinc-700 px-3 py-1 text-xs text-zinc-300 hover:border-red-500 hover:text-red-400"
                       >
-                        Hapus
+                        {tr("admin.member.delete")}
                       </button>
                     </td>
                   </tr>

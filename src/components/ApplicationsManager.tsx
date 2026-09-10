@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import type { Application } from "@/lib/types";
+import { translate as t, type Lang } from "@/i18n/dictionaries";
 
 const statusColors: Record<string, string> = {
   pending: "bg-yellow-500/20 text-yellow-300",
@@ -9,13 +10,13 @@ const statusColors: Record<string, string> = {
   ditolak: "bg-red-500/20 text-red-300",
 };
 
-const statusLabels: Record<string, string> = {
-  pending: "Pending",
-  diterima: "Diterima",
-  ditolak: "Ditolak",
-};
-
-export default function ApplicationsManager() {
+export default function ApplicationsManager({ lang }: { lang: Lang }) {
+  const tr = (key: string) => t(lang, key);
+  const statusLabel = (s: string) => {
+    if (s === "diterima") return tr("admin.apps.status.accepted");
+    if (s === "ditolak") return tr("admin.apps.status.rejected");
+    return tr("admin.apps.status.pending");
+  };
   const [items, setItems] = useState<Application[]>([]);
   const [loading, setLoading] = useState(true);
   const [busyId, setBusyId] = useState<number | null>(null);
@@ -43,24 +44,24 @@ export default function ApplicationsManager() {
         body: JSON.stringify({ status }),
       });
       const json = await res.json();
-      if (!res.ok || !json.ok) throw new Error(json.error ?? "Gagal.");
-      setMessage(status === "diterima" ? "Pendaftar diterima dan menjadi member." : "Pendaftar ditolak.");
+      if (!res.ok || !json.ok) throw new Error(json.error ?? tr("admin.apps.updateFail"));
+      setMessage(status === "diterima" ? tr("admin.apps.accepted") : tr("admin.apps.rejected"));
       await load();
     } catch (err) {
-      setMessage(err instanceof Error ? err.message : "Gagal memperbarui status.");
+      setMessage(err instanceof Error ? err.message : tr("admin.apps.updateFail"));
     } finally {
       setBusyId(null);
     }
   }
 
   if (loading) {
-    return <p className="mt-4 text-zinc-400">Memuat...</p>;
+    return <p className="mt-4 text-zinc-400">{tr("admin.apps.loading")}</p>;
   }
 
   if (items.length === 0) {
     return (
       <div className="mt-4 rounded-xl border border-zinc-800 bg-zinc-900/50 p-10 text-center text-zinc-400">
-        Belum ada pendaftar masuk.
+        {tr("admin.apps.empty")}
       </div>
     );
   }
@@ -79,21 +80,21 @@ export default function ApplicationsManager() {
                   statusColors[a.status] ?? "bg-zinc-700 text-zinc-300"
                 }`}
               >
-                {statusLabels[a.status] ?? a.status}
+                {statusLabel(a.status)}
               </span>
             </div>
 
             <dl className="mt-4 space-y-1 text-sm text-zinc-400">
               <div className="flex justify-between gap-4">
-                <dt>Level</dt>
+                <dt>{tr("admin.apps.level")}</dt>
                 <dd className="text-zinc-200">{a.level ?? "-"}</dd>
               </div>
               <div className="flex justify-between gap-4">
-                <dt>Discord</dt>
+                <dt>{tr("admin.apps.discord")}</dt>
                 <dd className="text-zinc-200">{a.discord ?? "-"}</dd>
               </div>
               <div className="flex justify-between gap-4">
-                <dt>Daftar</dt>
+                <dt>{tr("admin.apps.applied")}</dt>
                 <dd className="text-zinc-200">{a.created_at}</dd>
               </div>
             </dl>
@@ -110,7 +111,7 @@ export default function ApplicationsManager() {
                   onClick={() => setStatus(a.id, "diterima")}
                   className="rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-zinc-950 transition-colors hover:bg-emerald-400 disabled:opacity-60"
                 >
-                  Terima
+                  {tr("admin.apps.accept")}
                 </button>
                 <button
                   type="button"
@@ -118,7 +119,7 @@ export default function ApplicationsManager() {
                   onClick={() => setStatus(a.id, "ditolak")}
                   className="rounded-lg border border-zinc-700 px-4 py-2 text-sm font-semibold text-zinc-300 transition-colors hover:border-red-500 hover:text-red-400 disabled:opacity-60"
                 >
-                  Tolak
+                  {tr("admin.apps.reject")}
                 </button>
               </div>
             )}
