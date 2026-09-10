@@ -17,10 +17,10 @@ export default function Intro({ lang }: { lang: Lang }) {
     const words = WORDS[lang];
     const wordTimer = setInterval(() => {
       setWordIndex((i) => (i + 1) % words.length);
-    }, 600);
+    }, 800);
 
-    const leaveTimer = setTimeout(() => setLeaving(true), 2400);
-    const goneTimer = setTimeout(() => setGone(true), 3000);
+    const leaveTimer = setTimeout(() => setLeaving(true), 4500);
+    const goneTimer = setTimeout(() => setGone(true), 5100);
 
     return () => {
       clearInterval(wordTimer);
