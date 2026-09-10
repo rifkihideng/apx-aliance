@@ -6,6 +6,11 @@ import { translate as t } from "@/i18n/dictionaries";
 
 export const dynamic = "force-dynamic";
 
+export const metadata = {
+  title: "Roster",
+  description: "Daftar member aliansi APX di game Narco Empire.",
+};
+
 export default async function RosterPage() {
   const lang = await getLang();
   const tr = (key: string) => t(lang, key);

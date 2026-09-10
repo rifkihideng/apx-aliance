@@ -8,6 +8,15 @@ import ChatBot from "@/components/ChatBot";
 import { getLang } from "@/lib/lang";
 import { getSiteUrl } from "@/lib/site";
 
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "APX Alliance",
+  url: getSiteUrl(),
+  logo: `${getSiteUrl()}/icon.svg`,
+  description: "Website resmi aliansi APX di game Narco Empire.",
+};
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -51,6 +60,10 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-zinc-950 text-zinc-100">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+        />
         <CursorGlow />
         <Navbar lang={lang} />
         <main className="flex-1">{children}</main>

@@ -2,7 +2,10 @@ import { getLang } from "@/lib/lang";
 import { translate as t } from "@/i18n/dictionaries";
 import Reveal from "@/components/Reveal";
 
-export const metadata = { title: "Aturan Aliansi" };
+export const metadata = {
+  title: "Aturan Aliansi",
+  description: "Aturan yang wajib dipatuhi seluruh member aliansi APX.",
+};
 
 const ruleKeys = ["1", "2", "3", "4", "5", "6"];
 

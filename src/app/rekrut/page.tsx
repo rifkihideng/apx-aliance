@@ -2,7 +2,10 @@ import RecruitmentForm from "@/components/RecruitmentForm";
 import { getLang } from "@/lib/lang";
 import { translate as t } from "@/i18n/dictionaries";
 
-export const metadata = { title: "Gabung APX" };
+export const metadata = {
+  title: "Gabung APX",
+  description: "Daftar menjadi member aliansi APX di game Narco Empire.",
+};
 
 export default async function RekrutPage() {
   const lang = await getLang();

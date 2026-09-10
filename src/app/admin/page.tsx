@@ -12,12 +12,16 @@ export default async function AdminPage() {
   const lang = await getLang();
   const tr = (key: string) => t(lang, key);
 
-  const totalMembers = (await dbGet<{ c: number }>("SELECT COUNT(*) AS c FROM members"))?.c ?? 0;
-  const activeMembers = (await dbGet<{ c: number }>("SELECT COUNT(*) AS c FROM members WHERE active = 1"))?.c ?? 0;
-  const pendingApps = (await dbGet<{ c: number }>("SELECT COUNT(*) AS c FROM applications WHERE status = 'pending'"))?.c ?? 0;
-  const totalNews = (await dbGet<{ c: number }>("SELECT COUNT(*) AS c FROM announcements"))?.c ?? 0;
-  const totalEvents = (await dbGet<{ c: number }>("SELECT COUNT(*) AS c FROM events"))?.c ?? 0;
-  const pushSubs = (await dbGet<{ c: number }>("SELECT COUNT(*) AS c FROM push_subscriptions"))?.c ?? 0;
+  const counts = await Promise.all([
+    dbGet<{ c: number }>("SELECT COUNT(*) AS c FROM members"),
+    dbGet<{ c: number }>("SELECT COUNT(*) AS c FROM members WHERE active = 1"),
+    dbGet<{ c: number }>("SELECT COUNT(*) AS c FROM applications WHERE status = 'pending'"),
+    dbGet<{ c: number }>("SELECT COUNT(*) AS c FROM announcements"),
+    dbGet<{ c: number }>("SELECT COUNT(*) AS c FROM events"),
+    dbGet<{ c: number }>("SELECT COUNT(*) AS c FROM push_subscriptions"),
+  ]);
+  const [totalMembers, activeMembers, pendingApps, totalNews, totalEvents, pushSubs] =
+    counts.map((r) => r?.c ?? 0);
 
   return (
     <AdminShell>

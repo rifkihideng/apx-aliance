@@ -13,6 +13,7 @@ export default function LanguageToggle({ lang }: { lang: Lang }) {
     <button
       type="button"
       onClick={toggle}
+      aria-label={lang === "id" ? "Switch to English" : "Ganti ke Bahasa Indonesia"}
       className="rounded-md border border-zinc-700 px-3 py-1 text-xs font-semibold text-zinc-300 transition-colors hover:border-emerald-400 hover:text-emerald-400"
       title={lang === "id" ? "Switch to English" : "Ganti ke Bahasa Indonesia"}
     >

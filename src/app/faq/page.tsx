@@ -2,7 +2,10 @@ import { getLang } from "@/lib/lang";
 import { translate as t } from "@/i18n/dictionaries";
 import Reveal from "@/components/Reveal";
 
-export const metadata = { title: "FAQ" };
+export const metadata = {
+  title: "FAQ",
+  description: "Pertanyaan yang sering diajukan seputar aliansi APX.",
+};
 
 const faqKeys = ["1", "2", "3", "4", "5", "6"];
 

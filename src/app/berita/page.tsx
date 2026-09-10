@@ -5,7 +5,10 @@ import { translate as t } from "@/i18n/dictionaries";
 import Reveal from "@/components/Reveal";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "Berita" };
+export const metadata = {
+  title: "Berita",
+  description: "Berita dan pengumuman terbaru dari aliansi APX.",
+};
 
 export default async function BeritaPage() {
   const lang = await getLang();

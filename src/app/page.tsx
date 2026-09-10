@@ -13,11 +13,15 @@ export default async function Home() {
   const lang = await getLang();
   const tr = (key: string) => t(lang, key);
 
-  const total = (await dbGet<{ c: number }>("SELECT COUNT(*) AS c FROM members"))?.c ?? 0;
-  const aktif = (await dbGet<{ c: number }>("SELECT COUNT(*) AS c FROM members WHERE active = 1"))?.c ?? 0;
-  const nextEvent = await dbGet<{ title: string; event_date: string; event_time: string | null }>(
-    "SELECT title, event_date, event_time FROM events WHERE date(event_date) >= date('now', 'localtime') ORDER BY event_date ASC, event_time ASC LIMIT 1"
-  );
+  const [totalRow, aktifRow, nextEvent] = await Promise.all([
+    dbGet<{ c: number }>("SELECT COUNT(*) AS c FROM members"),
+    dbGet<{ c: number }>("SELECT COUNT(*) AS c FROM members WHERE active = 1"),
+    dbGet<{ title: string; event_date: string; event_time: string | null }>(
+      "SELECT title, event_date, event_time FROM events WHERE date(event_date) >= date('now', 'localtime') ORDER BY event_date ASC, event_time ASC LIMIT 1"
+    ),
+  ]);
+  const total = totalRow?.c ?? 0;
+  const aktif = aktifRow?.c ?? 0;
 
   return (
     <div>
@@ -36,6 +40,10 @@ export default async function Home() {
             aria-hidden="true"
           />
         </Parallax>
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.04)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.04)_1px,transparent_1px)] bg-[size:52px_52px] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_40%,black,transparent)]"
+        />
         <div className="relative mx-auto max-w-6xl px-4 py-24 sm:px-6 sm:py-32">
           <p className="animate-fade-up text-sm font-semibold uppercase tracking-widest text-emerald-400">
             {tr("home.tagline")}
@@ -59,6 +67,12 @@ export default async function Home() {
             >
               {tr("home.roster")}
             </Link>
+          </div>
+        </div>
+
+        <div className="pointer-events-none absolute bottom-6 left-1/2 hidden -translate-x-1/2 sm:block">
+          <div className="flex h-10 w-6 items-start justify-center rounded-full border-2 border-zinc-700 p-1.5">
+            <div className="h-2 w-1 animate-bounce rounded-full bg-emerald-400" />
           </div>
         </div>
       </section>
@@ -133,7 +147,7 @@ function formatEventDate(date: string, lang: Lang) {
 function Stat({ label, value, icon }: { label: string; value: string | number; icon: React.ReactNode }) {
   return (
     <div className="card-lift rounded-xl border border-zinc-800 bg-zinc-950 p-6 text-center">
-      <div className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-400">
+      <div className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-400" aria-hidden="true">
         {icon}
       </div>
       <p className="text-3xl font-black text-emerald-400">{value}</p>
@@ -145,7 +159,7 @@ function Stat({ label, value, icon }: { label: string; value: string | number; i
 function Feature({ title, desc, icon }: { title: string; desc: string; icon: React.ReactNode }) {
   return (
     <div className="card-lift h-full rounded-xl border border-zinc-800 bg-zinc-950 p-6">
-      <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-400">
+      <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-400" aria-hidden="true">
         {icon}
       </div>
       <h3 className="text-lg font-semibold text-emerald-400">{title}</h3>

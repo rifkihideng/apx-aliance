@@ -6,7 +6,10 @@ import { formatTimeZones } from "@/lib/time";
 import Reveal from "@/components/Reveal";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "Jadwal" };
+export const metadata = {
+  title: "Jadwal",
+  description: "Jadwal war dan event aliansi APX di Narco Empire.",
+};
 
 function formatDate(date: string, lang: Lang) {
   const [y, m, d] = date.split("-");
