@@ -29,6 +29,7 @@ export default function AdminLoginForm({ lang }: { lang: Lang }) {
   const [captchaToken, setCaptchaToken] = useState("");
   const [captchaEnabled, setCaptchaEnabled] = useState(false);
   const captchaRef = useRef<HTMLDivElement>(null);
+  const renderedRef = useRef(false);
 
   useEffect(() => {
     if (!RECAPTCHA_SITE_KEY) return;
@@ -40,7 +41,9 @@ export default function AdminLoginForm({ lang }: { lang: Lang }) {
     };
 
     const render = () => {
+      if (renderedRef.current) return;
       if (captchaRef.current && w.grecaptcha) {
+        renderedRef.current = true;
         w.grecaptcha.render(captchaRef.current, {
           sitekey: RECAPTCHA_SITE_KEY,
           callback: (token: string) => setCaptchaToken(token),
