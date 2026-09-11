@@ -26,6 +26,58 @@ body {
   background-attachment: fixed;
 }
 
+/* ===== Tema terang (kelas .light di <html>) ===== */
+.light {
+  --background: #f7f7f8;
+  --foreground: #18181b;
+
+  /* Balik palet zinc: latar gelap -> terang, teks terang -> gelap */
+  --color-zinc-950: #f7f7f8;
+  --color-zinc-900: #ffffff;
+  --color-zinc-800: #e4e4e7;
+  --color-zinc-700: #d4d4d8;
+  --color-zinc-600: #a1a1aa;
+  --color-zinc-500: #71717a;
+  --color-zinc-400: #52525b;
+  --color-zinc-300: #3f3f46;
+  --color-zinc-200: #27272a;
+  --color-zinc-100: #18181b;
+
+  /* Emerald lebih gelap agar kontras di latar terang */
+  --color-emerald-300: #047857;
+  --color-emerald-400: #059669;
+}
+
+.light body {
+  background-image:
+    radial-gradient(1000px 520px at 12% -10%, rgba(16, 185, 129, 0.08), transparent 60%),
+    radial-gradient(900px 480px at 92% 0%, rgba(16, 185, 129, 0.05), transparent 55%);
+}
+
+.light ::-webkit-scrollbar-track {
+  background: #efeff1;
+}
+.light ::-webkit-scrollbar-thumb {
+  background: #c9c9cf;
+  border-color: #efeff1;
+}
+.light ::-webkit-scrollbar-thumb:hover {
+  background: #10b981;
+}
+
+/* Transisi halus saat ganti tema */
+html.theme-transition,
+html.theme-transition *,
+html.theme-transition *::before,
+html.theme-transition *::after {
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease,
+    fill 0.3s ease,
+    stroke 0.3s ease !important;
+}
+
 ::selection {
   background: rgba(16, 185, 129, 0.35);
   color: #ecfdf5;

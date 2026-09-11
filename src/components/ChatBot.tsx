@@ -324,7 +324,7 @@ export default function ChatBot({ lang }: { lang: Lang }) {
                 <div
                   className={
                     m.from === "user"
-                      ? "max-w-[80%] rounded-2xl rounded-br-md bg-gradient-to-br from-emerald-400 to-emerald-600 px-4 py-2.5 text-sm font-medium text-zinc-950 shadow-lg shadow-emerald-500/20"
+                      ? "max-w-[80%] rounded-2xl rounded-br-md bg-gradient-to-br from-emerald-400 to-emerald-600 px-4 py-2.5 text-sm font-medium text-emerald-950 shadow-lg shadow-emerald-500/20"
                       : "max-w-[80%] rounded-2xl rounded-bl-md border border-zinc-800 bg-zinc-900 px-4 py-2.5 text-sm text-zinc-200"
                   }
                 >
@@ -387,7 +387,7 @@ export default function ChatBot({ lang }: { lang: Lang }) {
               type="submit"
               disabled={!input.trim() || typing}
               aria-label={lang === "id" ? "Kirim" : "Send"}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 text-zinc-950 shadow-lg shadow-emerald-500/30 transition-transform hover:scale-105 disabled:opacity-40 disabled:hover:scale-100"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 text-emerald-950 shadow-lg shadow-emerald-500/30 transition-transform hover:scale-105 disabled:opacity-40 disabled:hover:scale-100"
             >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
                 <path d="m22 2-7 20-4-9-9-4Z" />
@@ -402,7 +402,7 @@ export default function ChatBot({ lang }: { lang: Lang }) {
         type="button"
         onClick={() => setOpen((o) => !o)}
         aria-label={open ? (lang === "id" ? "Tutup chat" : "Close chat") : lang === "id" ? "Buka chat bot" : "Open chat bot"}
-        className="group fixed bottom-6 right-4 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 text-zinc-950 shadow-xl shadow-emerald-500/40 transition-transform hover:scale-110 sm:right-6"
+        className="group fixed bottom-6 right-4 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 text-emerald-950 shadow-xl shadow-emerald-500/40 transition-transform hover:scale-110 sm:right-6"
       >
         {!open && (
           <span className="absolute -right-0.5 -top-0.5 flex h-3.5 w-3.5">

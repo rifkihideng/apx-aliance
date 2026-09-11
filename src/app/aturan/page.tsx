@@ -22,7 +22,7 @@ export default async function AturanPage() {
         {ruleKeys.map((r, i) => (
           <Reveal key={r} delay={i * 80}>
             <li className="card-lift flex gap-4 rounded-xl border border-zinc-800 bg-zinc-900/50 p-5">
-              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-emerald-500 font-bold text-zinc-950">
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-emerald-500 font-bold text-emerald-950">
                 {i + 1}
               </span>
               <div>

@@ -41,7 +41,7 @@ export default async function AdminPage() {
         <div className="mt-6 flex flex-wrap gap-3">
           <Link
             href="/admin/member"
-            className="rounded-lg bg-emerald-500 px-5 py-2 font-semibold text-zinc-950 transition-colors hover:bg-emerald-400"
+            className="rounded-lg bg-emerald-500 px-5 py-2 font-semibold text-emerald-950 transition-colors hover:bg-emerald-400"
           >
             {tr("admin.dashboard.manageMembers")}
           </Link>

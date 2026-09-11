@@ -10,17 +10,17 @@ const WORDS: Record<Lang, string[]> = {
 };
 
 export default function Intro({ lang }: { lang: Lang }) {
-  const [mounted, setMounted] = useState(false);
+  const [container, setContainer] = useState<HTMLElement | null>(null);
   const [wordIndex, setWordIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
   const [gone, setGone] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
+    setContainer(document.body);
   }, []);
 
   useEffect(() => {
-    if (!mounted) return;
+    if (!container) return;
 
     const words = WORDS[lang];
     const wordTimer = setInterval(() => {
@@ -35,9 +35,9 @@ export default function Intro({ lang }: { lang: Lang }) {
       clearTimeout(leaveTimer);
       clearTimeout(goneTimer);
     };
-  }, [mounted, lang]);
+  }, [container, lang]);
 
-  if (!mounted || gone) return null;
+  if (!container || gone) return null;
 
   const words = WORDS[lang];
 
@@ -53,7 +53,7 @@ export default function Intro({ lang }: { lang: Lang }) {
         className="absolute inset-0 bg-[radial-gradient(640px_320px_at_50%_45%,rgba(16,185,129,0.16),transparent)]"
       />
 
-      <div className="animate-fade-up flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-emerald-400 to-emerald-600 text-3xl font-black text-zinc-950 shadow-xl shadow-emerald-500/30">
+      <div className="animate-fade-up flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-emerald-400 to-emerald-600 text-3xl font-black text-emerald-950 shadow-xl shadow-emerald-500/30">
         APX
       </div>
 
@@ -70,6 +70,6 @@ export default function Intro({ lang }: { lang: Lang }) {
         </span>
       </div>
     </div>,
-    document.body
+    container
   );
 }

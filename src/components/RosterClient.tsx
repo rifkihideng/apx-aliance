@@ -5,7 +5,7 @@ import type { Member } from "@/lib/types";
 import { translate as t, type Lang } from "@/i18n/dictionaries";
 
 const roleColors: Record<string, string> = {
-  Ketua: "bg-emerald-500 text-zinc-950",
+  Ketua: "bg-emerald-500 text-emerald-950",
   Wakil: "bg-emerald-400/20 text-emerald-300",
   Pengurus: "bg-sky-500/20 text-sky-300",
   Member: "bg-zinc-700/40 text-zinc-300",

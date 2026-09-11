@@ -39,7 +39,7 @@ export default async function JadwalPage() {
           {events.map((e, i) => (
             <Reveal key={e.id} delay={i * 80}>
               <div className="card-lift flex gap-4 rounded-xl border border-zinc-800 bg-zinc-900/50 p-5">
-                <div className="flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-lg bg-emerald-500 text-zinc-950">
+                <div className="flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-lg bg-emerald-500 text-emerald-950">
                   <span className="text-lg font-black leading-none">
                     {e.event_date.split("-")[2]}
                   </span>

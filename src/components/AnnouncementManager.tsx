@@ -140,7 +140,7 @@ export default function AnnouncementManager({ lang }: { lang: Lang }) {
         <button
           type="submit"
           disabled={saving}
-          className="mt-4 rounded-lg bg-emerald-500 px-5 py-2 font-semibold text-zinc-950 transition-colors hover:bg-emerald-400 disabled:opacity-60"
+          className="mt-4 rounded-lg bg-emerald-500 px-5 py-2 font-semibold text-emerald-950 transition-colors hover:bg-emerald-400 disabled:opacity-60"
         >
           {saving ? tr("admin.news.saving") : form.id ? tr("admin.news.save") : tr("admin.news.addBtn")}
         </button>

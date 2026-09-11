@@ -21,7 +21,7 @@ export default function AdminNav({ lang }: { lang: Lang }) {
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
         <div className="flex items-center gap-5">
           <Link href="/admin" className="flex items-center gap-2">
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-400 to-emerald-600 text-sm font-black text-zinc-950 shadow-lg shadow-emerald-500/30">
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-400 to-emerald-600 text-sm font-black text-emerald-950 shadow-lg shadow-emerald-500/30">
               APX
             </span>
             <span className="text-sm font-bold tracking-wide text-zinc-100">{tr("admin.nav.title")}</span>

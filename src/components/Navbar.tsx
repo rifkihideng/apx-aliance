@@ -4,7 +4,9 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { translate as t, type Lang } from "@/i18n/dictionaries";
+import type { Theme } from "@/lib/theme";
 import LanguageToggle from "./LanguageToggle";
+import ThemeToggle from "./ThemeToggle";
 import PushSubscribe from "./PushSubscribe";
 
 const links = [
@@ -18,7 +20,7 @@ const links = [
   { href: "/admin", key: "nav.admin" },
 ];
 
-export default function Navbar({ lang }: { lang: Lang }) {
+export default function Navbar({ lang, theme }: { lang: Lang; theme: Theme }) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
@@ -44,7 +46,7 @@ export default function Navbar({ lang }: { lang: Lang }) {
     >
       <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
         <Link href="/" className="flex items-center gap-2">
-          <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-400 to-emerald-600 font-black text-zinc-950 shadow-lg shadow-emerald-500/30">
+          <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-400 to-emerald-600 font-black text-emerald-950 shadow-lg shadow-emerald-500/30">
             APX
           </span>
           <span className="text-lg font-bold tracking-wide">APX Alliance</span>
@@ -66,12 +68,13 @@ export default function Navbar({ lang }: { lang: Lang }) {
             ))}
           </ul>
           <LanguageToggle lang={lang} />
+          <ThemeToggle theme={theme} />
           <div className="hidden xl:block">
             <PushSubscribe />
           </div>
           <Link
             href="/rekrut"
-            className="btn-primary hidden rounded-lg px-4 py-2 text-sm font-semibold text-zinc-950 lg:inline-flex"
+            className="btn-primary hidden rounded-lg px-4 py-2 text-sm font-semibold text-emerald-950 lg:inline-flex"
           >
             {tr("nav.join")}
           </Link>
@@ -106,7 +109,7 @@ export default function Navbar({ lang }: { lang: Lang }) {
               <Link
                 href="/rekrut"
                 onClick={() => setOpen(false)}
-                className="btn-primary mt-2 block rounded-md px-2 py-2 text-center font-semibold text-zinc-950"
+                className="btn-primary mt-2 block rounded-md px-2 py-2 text-center font-semibold text-emerald-950"
               >
                 {tr("nav.join")}
               </Link>

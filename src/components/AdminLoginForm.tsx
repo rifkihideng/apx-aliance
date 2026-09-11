@@ -75,7 +75,7 @@ export default function AdminLoginForm({ lang }: { lang: Lang }) {
           <button
             type="submit"
             disabled={loading}
-            className="btn-primary w-full rounded-lg px-4 py-3 font-semibold text-zinc-950 disabled:opacity-60"
+            className="btn-primary w-full rounded-lg px-4 py-3 font-semibold text-emerald-950 disabled:opacity-60"
           >
             {loading ? tr("admin.login.checking") : tr("admin.login.submit")}
           </button>

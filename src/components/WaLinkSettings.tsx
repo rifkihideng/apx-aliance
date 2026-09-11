@@ -64,7 +64,7 @@ export default function WaLinkSettings({ lang }: { lang: Lang }) {
         <button
           type="submit"
           disabled={saving || loading}
-          className="shrink-0 rounded-lg bg-emerald-500 px-5 py-2 text-sm font-semibold text-zinc-950 transition-colors hover:bg-emerald-400 disabled:opacity-60"
+          className="shrink-0 rounded-lg bg-emerald-500 px-5 py-2 text-sm font-semibold text-emerald-950 transition-colors hover:bg-emerald-400 disabled:opacity-60"
         >
           {saving ? tr("admin.wa.saving") : tr("admin.wa.save")}
         </button>

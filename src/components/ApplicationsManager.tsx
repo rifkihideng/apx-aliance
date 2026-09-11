@@ -109,7 +109,7 @@ export default function ApplicationsManager({ lang }: { lang: Lang }) {
                   type="button"
                   disabled={busyId === a.id}
                   onClick={() => setStatus(a.id, "diterima")}
-                  className="rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-zinc-950 transition-colors hover:bg-emerald-400 disabled:opacity-60"
+                  className="rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-emerald-950 transition-colors hover:bg-emerald-400 disabled:opacity-60"
                 >
                   {tr("admin.apps.accept")}
                 </button>

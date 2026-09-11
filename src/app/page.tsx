@@ -59,7 +59,7 @@ export default async function Home() {
           <div className="animate-fade-up mt-8 flex flex-wrap gap-4">
             <Link
               href="/rekrut"
-              className="btn-primary rounded-lg px-6 py-3 font-semibold text-zinc-950"
+              className="btn-primary rounded-lg px-6 py-3 font-semibold text-emerald-950"
             >
               {tr("home.join")}
             </Link>

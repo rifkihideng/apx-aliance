@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import CursorGlow from "@/components/CursorGlow";
 import ChatBot from "@/components/ChatBot";
 import { getLang } from "@/lib/lang";
+import { getTheme } from "@/lib/theme";
 import { getSiteUrl } from "@/lib/site";
 
 const websiteSchema = {
@@ -52,12 +53,15 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
   const lang = await getLang();
+  const theme = await getTheme();
 
   return (
     <html
       lang={lang}
       data-scroll-behavior="smooth"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased ${
+        theme === "light" ? "light" : ""
+      }`}
     >
       <body className="min-h-full flex flex-col bg-zinc-950 text-zinc-100">
         <script
@@ -65,7 +69,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
         />
         <CursorGlow />
-        <Navbar lang={lang} />
+        <Navbar lang={lang} theme={theme} />
         <main className="flex-1">{children}</main>
         <Footer lang={lang} />
         <ChatBot lang={lang} />

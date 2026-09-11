@@ -90,7 +90,7 @@ export default function RecruitmentForm({ lang }: { lang: Lang }) {
       <button
         type="submit"
         disabled={status === "loading"}
-        className="w-full rounded-lg bg-emerald-500 px-4 py-3 font-semibold text-zinc-950 transition-colors hover:bg-emerald-400 disabled:opacity-60"
+        className="w-full rounded-lg bg-emerald-500 px-4 py-3 font-semibold text-emerald-950 transition-colors hover:bg-emerald-400 disabled:opacity-60"
       >
         {status === "loading" ? tr("form.sending") : tr("form.submit")}
       </button>

@@ -232,7 +232,7 @@ export default function EventManager({ lang }: { lang: Lang }) {
         <button
           type="submit"
           disabled={saving}
-          className="mt-4 rounded-lg bg-emerald-500 px-5 py-2 font-semibold text-zinc-950 transition-colors hover:bg-emerald-400 disabled:opacity-60"
+          className="mt-4 rounded-lg bg-emerald-500 px-5 py-2 font-semibold text-emerald-950 transition-colors hover:bg-emerald-400 disabled:opacity-60"
         >
           {saving ? tr("admin.schedule.saving") : form.id ? tr("admin.schedule.save") : tr("admin.schedule.addBtn")}
         </button>
