@@ -12,6 +12,24 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: "Body JSON tidak valid." }, { status: 400 });
   }
 
+  const secret = process.env.RECAPTCHA_SECRET_KEY;
+  if (secret) {
+    const captchaToken = String(body.captchaToken ?? "");
+    if (!captchaToken) {
+      return NextResponse.json({ ok: false, error: "CAPTCHA wajib diisi." }, { status: 400 });
+    }
+
+    const verify = await fetch("https://www.google.com/recaptcha/api/siteverify", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: `secret=${encodeURIComponent(secret)}&response=${encodeURIComponent(captchaToken)}`,
+    });
+    const data = (await verify.json()) as { success?: boolean };
+    if (!data.success) {
+      return NextResponse.json({ ok: false, error: "CAPTCHA tidak valid. Coba lagi." }, { status: 400 });
+    }
+  }
+
   const password = String(body.password ?? "");
   if (!verifyAdminPassword(password)) {
     const rl = rateLimit(`login-fail:${ip}`, 5, 15 * 60 * 1000);

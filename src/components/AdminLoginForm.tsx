@@ -1,8 +1,22 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { translate as t, type Lang } from "@/i18n/dictionaries";
+
+const RECAPTCHA_SITE_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
+
+type Grecaptcha = {
+  render: (
+    container: HTMLElement,
+    params: {
+      sitekey: string;
+      callback?: (token: string) => void;
+      "expired-callback"?: () => void;
+    }
+  ) => number;
+  reset: (widgetId: number) => void;
+};
 
 export default function AdminLoginForm({ lang }: { lang: Lang }) {
   const router = useRouter();
@@ -12,17 +26,58 @@ export default function AdminLoginForm({ lang }: { lang: Lang }) {
   const [show, setShow] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState("");
+  const [captchaEnabled, setCaptchaEnabled] = useState(false);
+  const captchaRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!RECAPTCHA_SITE_KEY) return;
+    setCaptchaEnabled(true);
+
+    const w = window as unknown as {
+      grecaptcha?: Grecaptcha;
+      __apxCaptchaOnload?: () => void;
+    };
+
+    const render = () => {
+      if (captchaRef.current && w.grecaptcha) {
+        w.grecaptcha.render(captchaRef.current, {
+          sitekey: RECAPTCHA_SITE_KEY,
+          callback: (token: string) => setCaptchaToken(token),
+          "expired-callback": () => setCaptchaToken(""),
+        });
+      }
+    };
+
+    if (w.grecaptcha) {
+      render();
+    } else {
+      w.__apxCaptchaOnload = render;
+      const script = document.createElement("script");
+      script.src =
+        "https://www.google.com/recaptcha/api.js?onload=__apxCaptchaOnload&render=explicit";
+      script.async = true;
+      script.defer = true;
+      document.body.appendChild(script);
+    }
+  }, []);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setLoading(true);
     setError("");
+
+    if (captchaEnabled && !captchaToken) {
+      setError(tr("admin.login.captcha"));
+      return;
+    }
+
+    setLoading(true);
 
     try {
       const res = await fetch("/api/admin/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password }),
+        body: JSON.stringify({ password, captchaToken }),
       });
       const json = await res.json();
       if (!res.ok || !json.ok) throw new Error(json.error ?? tr("admin.login.fail"));
@@ -69,6 +124,10 @@ export default function AdminLoginForm({ lang }: { lang: Lang }) {
               </button>
             </div>
           </label>
+
+          {captchaEnabled && (
+            <div ref={captchaRef} className="flex justify-center" />
+          )}
 
           {error && <p className="text-sm text-red-400">{error}</p>}
 

@@ -121,6 +121,7 @@ export const dictionaries: Record<Lang, Dict> = {
     "admin.login.submit": "Masuk",
     "admin.login.checking": "Memeriksa...",
     "admin.login.fail": "Gagal login.",
+    "admin.login.captcha": "Mohon selesaikan CAPTCHA.",
 
     "admin.dashboard.title": "Panel Admin",
     "admin.dashboard.subtitle": "Ringkasan dan pengelolaan aliansi APX.",
@@ -360,6 +361,7 @@ export const dictionaries: Record<Lang, Dict> = {
     "admin.login.submit": "Login",
     "admin.login.checking": "Checking...",
     "admin.login.fail": "Login failed.",
+    "admin.login.captcha": "Please complete the CAPTCHA.",
 
     "admin.dashboard.title": "Admin Panel",
     "admin.dashboard.subtitle": "Summary and management of the APX alliance.",
