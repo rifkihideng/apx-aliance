@@ -37,6 +37,7 @@ export const dictionaries: Record<Lang, Dict> = {
     "home.countdown.hours": "Jam",
     "home.countdown.mins": "Menit",
     "home.countdown.secs": "Detik",
+    "home.rank": "Peringkat Aliansi",
 
     "rules.title": "Aturan Aliansi",
     "rules.subtitle": "Ketentuan yang wajib dipatuhi seluruh member APX.",
@@ -275,6 +276,7 @@ export const dictionaries: Record<Lang, Dict> = {
     "home.countdown.hours": "Hours",
     "home.countdown.mins": "Minutes",
     "home.countdown.secs": "Seconds",
+    "home.rank": "Alliance Rank",
 
     "rules.title": "Alliance Rules",
     "rules.subtitle": "Rules that every APX member must follow.",
