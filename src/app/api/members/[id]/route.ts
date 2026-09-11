@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { dbGet, dbRun } from "@/lib/db";
+import { dbGet, dbRun, getRoleId, getRankId } from "@/lib/db";
 import { isAdminRequest } from "@/lib/admin-server";
 
 type RouteContext = { params: Promise<{ id: string }> };
@@ -42,8 +42,11 @@ export async function PATCH(request: Request, { params }: RouteContext) {
     }
     set("ign", ign);
   }
-  if (body.role !== undefined) set("role", String(body.role).trim() || "Member");
-  if (body.pangkat !== undefined) set("pangkat", body.pangkat ? String(body.pangkat).trim() : null);
+  if (body.role !== undefined) set("role_id", await getRoleId(String(body.role).trim() || "Member"));
+  if (body.pangkat !== undefined) {
+    const pangkat = body.pangkat ? String(body.pangkat).trim() : null;
+    set("rank_id", pangkat ? await getRankId(pangkat) : null);
+  }
   if (body.discord !== undefined) set("discord", body.discord ? String(body.discord).trim() : null);
   if (body.joined_at !== undefined) set("joined_at", body.joined_at ? String(body.joined_at).trim() : null);
   if (body.level !== undefined) {

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { dbGet, dbRun } from "@/lib/db";
+import { dbGet, dbRun, getEventTypeId } from "@/lib/db";
 import { isAdminRequest } from "@/lib/admin-server";
 
 type RouteContext = { params: Promise<{ id: string }> };
@@ -51,8 +51,8 @@ export async function PATCH(request: Request, { params }: RouteContext) {
     values.push(body.description ? String(body.description).trim() : null);
   }
   if (body.type !== undefined) {
-    fields.push("type = ?");
-    values.push(body.type ? String(body.type).trim() : "event");
+    fields.push("type_id = ?");
+    values.push(await getEventTypeId(body.type ? String(body.type).trim() : "event"));
   }
 
   if (fields.length === 0) {

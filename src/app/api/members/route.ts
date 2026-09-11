@@ -1,18 +1,20 @@
 import { NextResponse } from "next/server";
-import { dbAll, dbGet, dbRun, getSetting } from "@/lib/db";
+import { dbAll, dbGet, dbRun, getSetting, getRoleId, getRankId } from "@/lib/db";
 import { isAdminRequest } from "@/lib/admin-server";
 import { sendPushToAll } from "@/lib/push";
 
 export async function GET() {
   const members = await dbAll(
-    `SELECT id, ign, role, pangkat, level, discord, joined_at, active
-     FROM members
-     ORDER BY CASE role
+    `SELECT m.id, m.ign, r.name AS role, rk.name AS pangkat, m.level, m.discord, m.joined_at, m.active
+     FROM members m
+     JOIN roles r ON r.id = m.role_id
+     LEFT JOIN ranks rk ON rk.id = m.rank_id
+     ORDER BY CASE r.name
        WHEN 'Ketua' THEN 1
        WHEN 'Wakil' THEN 2
        WHEN 'Pengurus' THEN 3
        ELSE 4
-     END, level DESC`
+     END, m.level DESC`
   );
 
   return NextResponse.json({ ok: true, members });
@@ -47,11 +49,14 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: "IGN sudah terdaftar." }, { status: 409 });
   }
 
+  const roleId = await getRoleId(role);
+  const rankId = pangkat ? await getRankId(pangkat) : null;
+
   const info = await dbRun(
-    "INSERT INTO members (ign, role, pangkat, level, discord, joined_at) VALUES (?, ?, ?, ?, ?, ?)",
+    "INSERT INTO members (ign, role_id, rank_id, level, discord, joined_at) VALUES (?, ?, ?, ?, ?, ?)",
     ign,
-    role,
-    pangkat,
+    roleId,
+    rankId,
     level,
     discord,
     joined_at

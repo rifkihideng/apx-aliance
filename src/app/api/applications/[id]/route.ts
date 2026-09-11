@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { dbGet, dbRun, getSetting } from "@/lib/db";
+import { dbGet, dbRun, getSetting, getRoleId } from "@/lib/db";
 import { isAdminRequest } from "@/lib/admin-server";
 import { sendPushToAll } from "@/lib/push";
 
@@ -43,10 +43,9 @@ export async function PATCH(request: Request, { params }: RouteContext) {
         now.getDate()
       ).padStart(2, "0")}`;
       await dbRun(
-        "INSERT INTO members (ign, role, pangkat, level, discord, joined_at) VALUES (?, ?, ?, ?, ?, ?)",
+        "INSERT INTO members (ign, role_id, level, discord, joined_at) VALUES (?, ?, ?, ?, ?)",
         app.ign,
-        "Member",
-        null,
+        await getRoleId("Member"),
         app.level,
         app.discord,
         joined

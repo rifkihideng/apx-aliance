@@ -16,14 +16,16 @@ export default async function RosterPage() {
   const tr = (key: string) => t(lang, key);
 
   const members = await dbAll<Member>(
-    `SELECT id, ign, role, pangkat, level, discord, joined_at, active
-     FROM members
-     ORDER BY CASE role
+    `SELECT m.id, m.ign, r.name AS role, rk.name AS pangkat, m.level, m.discord, m.joined_at, m.active
+     FROM members m
+     JOIN roles r ON r.id = m.role_id
+     LEFT JOIN ranks rk ON rk.id = m.rank_id
+     ORDER BY CASE r.name
        WHEN 'Ketua' THEN 1
        WHEN 'Wakil' THEN 2
        WHEN 'Pengurus' THEN 3
        ELSE 4
-     END, level DESC`
+     END, m.level DESC`
   );
 
   return (
