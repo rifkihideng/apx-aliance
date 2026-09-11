@@ -8,7 +8,7 @@ Website aliansi **APX** untuk game **Narco Empire**.
 - **Tailwind CSS 4**
 - **Turso** (SQLite cloud) via `@libsql/client`, dengan fallback file lokal saat development
 - **Web Push Notification** via `web-push`
-- **Netlify** untuk deployment
+- **Vercel** untuk deployment
 
 ## Fitur
 
@@ -59,12 +59,38 @@ TURSO_AUTH_TOKEN=
 # Kunci privat VAPID untuk web push (generate via `npx web-push generate-vapid-keys`)
 VAPID_PRIVATE_KEY=
 
-# Opsional — URL publik situs untuk sitemap/OG (di Netlify otomatis dari env URL)
-NEXT_PUBLIC_SITE_URL=https://situs-kamu.netlify.app
+# Opsional — URL publik situs untuk sitemap/OG.
+# Di Vercel bisa dikosongkan karena otomatis memakai VERCEL_PROJECT_PRODUCTION_URL,
+# tapi disarankan di-set ke domain utama, mis. https://apx.example.com
+NEXT_PUBLIC_SITE_URL=
 ```
 
 Catatan: saat development, jika `TURSO_DATABASE_URL` kosong, aplikasi otomatis
 memakai file SQLite lokal di `data/apx.db`.
+
+## Deployment ke Vercel
+
+1. Import repository ini di [vercel.com/new](https://vercel.com/new).
+2. Vercel otomatis mendeteksi **Next.js** (tidak perlu setting build command).
+3. Tambahkan environment variables berikut di **Project → Settings → Environment Variables**
+   (scope: Production & Preview):
+
+   | Variable | Nilai |
+   | --- | --- |
+   | `ADMIN_PASSWORD` | password admin |
+   | `TURSO_DATABASE_URL` | `libsql://...` |
+   | `TURSO_AUTH_TOKEN` | token Turso |
+   | `VAPID_PRIVATE_KEY` | private key web push |
+   | `NEXT_PUBLIC_SITE_URL` | `https://domain-kamu` (opsional) |
+
+   > Vercel **tidak** menyediakan env `URL` seperti Netlify, jadi pastikan
+   > `NEXT_PUBLIC_SITE_URL` diisi bila memakai domain kustom.
+
+4. Deploy. Vercel akan menjalankan `next build` dan men-deploy function API
+   otomatis — tidak butuh `@netlify/plugin-nextjs` lagi.
+
+Catatan penting: filesystem Vercel bersifat read-only/ephemeral, jadi **wajib**
+pakai Turso di production (fallback SQLite lokal hanya untuk development).
 
 ## Database
 

@@ -69,7 +69,7 @@ function getDb(): Client {
 
     if (!url) {
       if (process.env.NODE_ENV === "production") {
-        throw new Error("TURSO_DATABASE_URL belum di-set di environment hosting (Netlify/Vercel).");
+        throw new Error("TURSO_DATABASE_URL belum di-set di environment hosting (Vercel).");
       }
       // Local fallback (hanya development): pakai file SQLite lokal via protokol file: milik libsql.
       const dataDir = path.join(process.cwd(), "data");
