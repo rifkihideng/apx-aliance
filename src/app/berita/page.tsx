@@ -3,6 +3,7 @@ import type { Announcement } from "@/lib/types";
 import { getLang } from "@/lib/lang";
 import { translate as t } from "@/i18n/dictionaries";
 import Reveal from "@/components/Reveal";
+import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 export const metadata = {
@@ -15,7 +16,7 @@ export default async function BeritaPage() {
   const tr = (key: string) => t(lang, key);
 
   const announcements = await dbAll<Announcement>(
-    "SELECT id, title, content, created_at FROM announcements ORDER BY id DESC"
+    "SELECT id, title, slug, content, created_at FROM announcements ORDER BY id DESC"
   );
 
   return (
@@ -32,9 +33,28 @@ export default async function BeritaPage() {
           {announcements.map((a, i) => (
             <Reveal key={a.id} delay={i * 80}>
               <article className="card-lift rounded-xl border border-zinc-800 bg-zinc-900/50 p-5">
-                <h2 className="text-lg font-bold text-zinc-100">{a.title}</h2>
+                <h2 className="text-lg font-bold text-zinc-100">
+                  {a.slug ? (
+                    <Link
+                      href={`/berita/${a.slug}`}
+                      className="transition-colors hover:text-emerald-400"
+                    >
+                      {a.title}
+                    </Link>
+                  ) : (
+                    a.title
+                  )}
+                </h2>
                 <p className="mt-1 text-xs text-zinc-500">{a.created_at}</p>
-                <p className="mt-3 text-sm leading-relaxed text-zinc-300">{a.content}</p>
+                <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-zinc-300">{a.content}</p>
+                {a.slug && (
+                  <Link
+                    href={`/berita/${a.slug}`}
+                    className="mt-3 inline-block text-sm font-semibold text-emerald-400 transition-colors hover:text-emerald-300"
+                  >
+                    {tr("news.readMore")}
+                  </Link>
+                )}
               </article>
             </Reveal>
           ))}

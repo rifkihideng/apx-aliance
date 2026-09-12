@@ -33,6 +33,7 @@ export default function MemberManager({ lang }: { lang: Lang }) {
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState<FormState>(emptyForm);
   const [saving, setSaving] = useState(false);
+  const [busyId, setBusyId] = useState<number | null>(null);
   const [message, setMessage] = useState("");
 
   async function load() {
@@ -126,6 +127,26 @@ export default function MemberManager({ lang }: { lang: Lang }) {
       await load();
     } catch (err) {
       setMessage(err instanceof Error ? err.message : tr("admin.member.deleteFail"));
+    }
+  }
+
+  async function toggleActive(m: Member) {
+    setBusyId(m.id);
+    setMessage("");
+    try {
+      const res = await fetch(`/api/members/${m.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ active: m.active ? 0 : 1 }),
+      });
+      const json = await res.json();
+      if (!res.ok || !json.ok) throw new Error(json.error ?? tr("admin.member.error"));
+      setMessage(tr("admin.member.activeToggled"));
+      await load();
+    } catch (err) {
+      setMessage(err instanceof Error ? err.message : tr("admin.member.error"));
+    } finally {
+      setBusyId(null);
     }
   }
 
@@ -249,16 +270,35 @@ export default function MemberManager({ lang }: { lang: Lang }) {
               </thead>
               <tbody>
                 {members.map((m) => (
-                  <tr key={m.id} className="border-t border-zinc-800">
-                    <td className="px-4 py-3 font-medium text-zinc-100">{m.ign}</td>
+                  <tr key={m.id} className={`border-t border-zinc-800 ${m.active ? "" : "opacity-60"}`}>
+                    <td className="px-4 py-3">
+                      <span className="font-medium text-zinc-100">{m.ign}</span>
+                      {!m.active && (
+                        <span className="ml-2 rounded-full bg-zinc-700 px-2 py-0.5 text-[10px] font-semibold text-zinc-300">
+                          {tr("admin.member.inactive")}
+                        </span>
+                      )}
+                    </td>
                     <td className="px-4 py-3 text-zinc-300">{m.role}</td>
                     <td className="px-4 py-3 text-zinc-300">{m.pangkat ?? "-"}</td>
                     <td className="px-4 py-3 text-zinc-300">{m.level ?? "-"}</td>
-                    <td className="px-4 py-3 text-right">
+                    <td className="whitespace-nowrap px-4 py-3 text-right">
+                      <button
+                        type="button"
+                        disabled={busyId === m.id}
+                        onClick={() => toggleActive(m)}
+                        className={`rounded-md border px-3 py-1 text-xs transition-colors disabled:opacity-60 ${
+                          m.active
+                            ? "border-zinc-700 text-zinc-300 hover:border-amber-400 hover:text-amber-400"
+                            : "border-emerald-500/40 text-emerald-400 hover:border-emerald-400 hover:text-emerald-300"
+                        }`}
+                      >
+                        {m.active ? tr("admin.member.deactivate") : tr("admin.member.activate")}
+                      </button>
                       <button
                         type="button"
                         onClick={() => startEdit(m)}
-                        className="rounded-md border border-zinc-700 px-3 py-1 text-xs text-zinc-300 hover:border-emerald-400 hover:text-emerald-400"
+                        className="ml-2 rounded-md border border-zinc-700 px-3 py-1 text-xs text-zinc-300 hover:border-emerald-400 hover:text-emerald-400"
                       >
                         {tr("admin.member.editBtn")}
                       </button>

@@ -4,6 +4,7 @@ import { getLang } from "@/lib/lang";
 import { translate as t, monthNames, type Lang } from "@/i18n/dictionaries";
 import { formatTimeZones } from "@/lib/time";
 import Reveal from "@/components/Reveal";
+import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 export const metadata = {
@@ -23,7 +24,7 @@ export default async function JadwalPage() {
 
   const events = await dbAll<EventItem>(
     // Denormalisasi: v_events sudah memuat `type` dari kolom salinan type_name.
-    "SELECT id, title, event_date, event_time, description, type, created_at FROM v_events ORDER BY event_date ASC"
+    "SELECT id, title, slug, event_date, event_time, description, type, created_at FROM v_events ORDER BY event_date ASC"
   );
 
   return (
@@ -50,7 +51,18 @@ export default async function JadwalPage() {
                 </div>
                 <div className="min-w-0">
                   <div className="flex flex-wrap items-center gap-2">
-                    <h2 className="font-semibold text-zinc-100">{e.title}</h2>
+                    <h2 className="font-semibold text-zinc-100">
+                      {e.slug ? (
+                        <Link
+                          href={`/jadwal/${e.slug}`}
+                          className="transition-colors hover:text-emerald-400"
+                        >
+                          {e.title}
+                        </Link>
+                      ) : (
+                        e.title
+                      )}
+                    </h2>
                     {e.type === "perang" && (
                       <span className="rounded-full bg-red-500/20 px-2.5 py-0.5 text-xs font-semibold text-red-300">
                         ⚔️ {tr("event.badge.perang")}
@@ -67,7 +79,15 @@ export default async function JadwalPage() {
                     <p className="mt-1 text-xs text-zinc-500">{formatTimeZones(e.event_time)}</p>
                   )}
                   {e.description && (
-                    <p className="mt-2 text-sm text-zinc-300">{e.description}</p>
+                    <p className="mt-2 line-clamp-2 text-sm text-zinc-300">{e.description}</p>
+                  )}
+                  {e.slug && (
+                    <Link
+                      href={`/jadwal/${e.slug}`}
+                      className="mt-2 inline-block text-sm font-semibold text-emerald-400 transition-colors hover:text-emerald-300"
+                    >
+                      {tr("schedule.readMore")}
+                    </Link>
                   )}
                 </div>
               </div>

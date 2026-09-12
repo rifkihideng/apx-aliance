@@ -84,6 +84,9 @@ export async function PATCH(request: Request, { params }: RouteContext) {
     }
   }
   if (body.level !== undefined) set("level", normalizeLevel(body.level));
+  if (body.active !== undefined) {
+    set("active", body.active === true || body.active === 1 || body.active === "1" ? 1 : 0);
+  }
 
   if (fields.length === 0) {
     return NextResponse.json({ ok: false, error: "Tidak ada perubahan." }, { status: 400 });
