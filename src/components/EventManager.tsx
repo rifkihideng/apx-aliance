@@ -59,7 +59,17 @@ export default function EventManager({ lang }: { lang: Lang }) {
   }
 
   useEffect(() => {
-    load();
+    let cancelled = false;
+    (async () => {
+      const res = await fetch("/api/events");
+      const json = await res.json();
+      if (cancelled) return;
+      if (json.ok) setItems(json.events);
+      setLoading(false);
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   function startEdit(e: EventItem) {

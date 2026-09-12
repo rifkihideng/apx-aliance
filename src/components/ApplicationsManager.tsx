@@ -30,7 +30,17 @@ export default function ApplicationsManager({ lang }: { lang: Lang }) {
   }
 
   useEffect(() => {
-    load();
+    let cancelled = false;
+    (async () => {
+      const res = await fetch("/api/applications");
+      const json = await res.json();
+      if (cancelled) return;
+      if (json.ok) setItems(json.applications);
+      setLoading(false);
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   async function setStatus(id: number, status: "diterima" | "ditolak") {

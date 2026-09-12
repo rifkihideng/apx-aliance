@@ -29,7 +29,17 @@ export default function AnnouncementManager({ lang }: { lang: Lang }) {
   }
 
   useEffect(() => {
-    load();
+    let cancelled = false;
+    (async () => {
+      const res = await fetch("/api/announcements");
+      const json = await res.json();
+      if (cancelled) return;
+      if (json.ok) setItems(json.announcements);
+      setLoading(false);
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   function startEdit(a: Announcement) {

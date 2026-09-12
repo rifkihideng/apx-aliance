@@ -235,16 +235,12 @@ function BotGlyph() {
 
 export default function ChatBot({ lang }: { lang: Lang }) {
   const [open, setOpen] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<Message[]>(() => [
+    { from: "bot", text: GREETING[lang] },
+  ]);
   const [input, setInput] = useState("");
   const [typing, setTyping] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (open && messages.length === 0) {
-      setMessages([{ from: "bot", text: GREETING[lang] }]);
-    }
-  }, [open, messages.length, lang]);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });

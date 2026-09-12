@@ -16,8 +16,9 @@ export default function Counter({ value }: { value: number }) {
       window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
 
     if (reduced) {
-      setDisplay(value);
-      return;
+      // Langsung tampilkan nilai akhir tanpa animasi (via rAF agar tidak setState sinkron).
+      const raf = requestAnimationFrame(() => setDisplay(value));
+      return () => cancelAnimationFrame(raf);
     }
 
     const duration = 1200;

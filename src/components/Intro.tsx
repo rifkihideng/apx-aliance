@@ -10,14 +10,12 @@ const WORDS: Record<Lang, string[]> = {
 };
 
 export default function Intro({ lang }: { lang: Lang }) {
-  const [container, setContainer] = useState<HTMLElement | null>(null);
   const [wordIndex, setWordIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
   const [gone, setGone] = useState(false);
 
-  useEffect(() => {
-    setContainer(document.body);
-  }, []);
+  // `document` tidak tersedia saat SSR; portal hanya dirender di klien.
+  const container = typeof document !== "undefined" ? document.body : null;
 
   useEffect(() => {
     if (!container) return;

@@ -21,12 +21,18 @@ export default function Countdown({
   const [now, setNow] = useState<number | null>(null);
 
   useEffect(() => {
-    setNow(Date.now());
-    const id = setInterval(() => setNow(Date.now()), 1000);
-    return () => clearInterval(id);
+    const tick = () => setNow(Date.now());
+    const raf = requestAnimationFrame(tick);
+    const id = setInterval(tick, 1000);
+    return () => {
+      cancelAnimationFrame(raf);
+      clearInterval(id);
+    };
   }, []);
 
-  const target = new Date(`${date}T${time ?? "00:00"}`).getTime();
+  // Waktu event disimpan dalam WIB (UTC+7), jadi target dihitung dengan offset
+  // tetap agar countdown benar untuk pengunjung di zona waktu lain.
+  const target = new Date(`${date}T${time ?? "00:00"}+07:00`).getTime();
   const diff = Math.max(0, target - (now ?? target));
 
   const cells = [

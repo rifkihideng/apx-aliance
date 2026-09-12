@@ -27,13 +27,12 @@ export default function AdminLoginForm({ lang }: { lang: Lang }) {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [captchaToken, setCaptchaToken] = useState("");
-  const [captchaEnabled, setCaptchaEnabled] = useState(false);
+  const captchaEnabled = Boolean(RECAPTCHA_SITE_KEY);
   const captchaRef = useRef<HTMLDivElement>(null);
   const renderedRef = useRef(false);
 
   useEffect(() => {
     if (!RECAPTCHA_SITE_KEY) return;
-    setCaptchaEnabled(true);
 
     const w = window as unknown as {
       grecaptcha?: Grecaptcha;

@@ -17,48 +17,59 @@ function urlBase64ToUint8Array(base64String: string) {
 export default function PushSubscribe() {
   const [status, setStatus] = useState<"loading" | "enabled" | "needed">("loading");
 
+  async function subscribe(): Promise<boolean> {
+    if (!("serviceWorker" in navigator) || !("PushManager" in window)) {
+      return false;
+    }
+
+    const reg = await navigator.serviceWorker.register("/sw.js");
+
+    let permission = Notification.permission;
+    if (permission === "default") {
+      permission = await Notification.requestPermission();
+    }
+    if (permission !== "granted") {
+      return false;
+    }
+
+    let subscription = await reg.pushManager.getSubscription();
+    if (!subscription) {
+      subscription = await reg.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
+      });
+    }
+
+    const res = await fetch("/api/push/subscribe", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ subscription: subscription.toJSON() }),
+    });
+    const json = await res.json();
+    return Boolean(res.ok && json.ok);
+  }
+
   async function ensureSubscription() {
     try {
-      if (!("serviceWorker" in navigator) || !("PushManager" in window)) {
-        setStatus("needed");
-        return;
-      }
-
-      const reg = await navigator.serviceWorker.register("/sw.js");
-
-      let permission = Notification.permission;
-      if (permission === "default") {
-        permission = await Notification.requestPermission();
-      }
-      if (permission !== "granted") {
-        setStatus("needed");
-        return;
-      }
-
-      let subscription = await reg.pushManager.getSubscription();
-      if (!subscription) {
-        subscription = await reg.pushManager.subscribe({
-          userVisibleOnly: true,
-          applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
-        });
-      }
-
-      const res = await fetch("/api/push/subscribe", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ subscription: subscription.toJSON() }),
-      });
-      const json = await res.json();
-      if (!res.ok || !json.ok) throw new Error(json.error ?? "Gagal.");
-
-      setStatus("enabled");
+      setStatus((await subscribe()) ? "enabled" : "needed");
     } catch {
       setStatus("needed");
     }
   }
 
   useEffect(() => {
-    ensureSubscription();
+    let cancelled = false;
+    (async () => {
+      try {
+        const ok = await subscribe();
+        if (!cancelled) setStatus(ok ? "enabled" : "needed");
+      } catch {
+        if (!cancelled) setStatus("needed");
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   if (status === "loading") return null;

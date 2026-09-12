@@ -43,7 +43,17 @@ export default function MemberManager({ lang }: { lang: Lang }) {
   }
 
   useEffect(() => {
-    load();
+    let cancelled = false;
+    (async () => {
+      const res = await fetch("/api/members");
+      const json = await res.json();
+      if (cancelled) return;
+      if (json.ok) setMembers(json.members);
+      setLoading(false);
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   function update<K extends keyof FormState>(key: K, value: FormState[K]) {
