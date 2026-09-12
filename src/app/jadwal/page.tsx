@@ -22,7 +22,8 @@ export default async function JadwalPage() {
   const tr = (key: string) => t(lang, key);
 
   const events = await dbAll<EventItem>(
-    "SELECT e.id, e.title, e.event_date, e.event_time, e.description, et.name AS type, e.created_at FROM events e JOIN event_types et ON et.id = e.type_id ORDER BY e.event_date ASC"
+    // Denormalisasi: v_events sudah memuat `type` dari kolom salinan type_name.
+    "SELECT id, title, event_date, event_time, description, type, created_at FROM v_events ORDER BY event_date ASC"
   );
 
   return (

@@ -16,16 +16,11 @@ export default async function RosterPage() {
   const tr = (key: string) => t(lang, key);
 
   const members = await dbAll<Member>(
-    `SELECT m.id, m.ign, r.name AS role, rk.name AS pangkat, m.level, m.discord, m.joined_at, m.active
-     FROM members m
-     JOIN roles r ON r.id = m.role_id
-     LEFT JOIN ranks rk ON rk.id = m.rank_id
-     ORDER BY CASE r.name
-       WHEN 'Ketua' THEN 1
-       WHEN 'Wakil' THEN 2
-       WHEN 'Pengurus' THEN 3
-       ELSE 4
-     END, m.level DESC`
+    // Denormalisasi: v_members sudah memuat role/pangkat dari kolom salinan,
+    // jadi tidak ada JOIN di sini dan `role_order` sudah dihitung di view.
+    `SELECT id, ign, role, pangkat, level, discord, joined_at, active
+     FROM v_members
+     ORDER BY role_order ASC, level DESC`
   );
 
   return (

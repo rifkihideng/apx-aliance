@@ -1,20 +1,32 @@
 import { NextResponse } from "next/server";
-import { dbAll, dbGet, dbRun, getSetting, getRoleId, getRankId } from "@/lib/db";
+import {
+  dbAll,
+  dbGet,
+  dbRun,
+  getRoleId,
+  getRankId,
+  getSetting,
+  makeUniqueSlug,
+  syncMemberDenormalized,
+} from "@/lib/db";
 import { isAdminRequest } from "@/lib/admin-server";
 import { sendPushToAll } from "@/lib/push";
+import {
+  normalizeDate,
+  normalizeDiscord,
+  normalizeKey,
+  normalizeLevel,
+  normalizeNullable,
+  normalizeText,
+} from "@/lib/normalize";
 
 export async function GET() {
+  // Jalur baca cepat (denormalisasi): v_members membaca kolom salinan
+  // role_name/rank_name, jadi tidak ada JOIN sama sekali di sini.
   const members = await dbAll(
-    `SELECT m.id, m.ign, r.name AS role, rk.name AS pangkat, m.level, m.discord, m.joined_at, m.active
-     FROM members m
-     JOIN roles r ON r.id = m.role_id
-     LEFT JOIN ranks rk ON rk.id = m.rank_id
-     ORDER BY CASE r.name
-       WHEN 'Ketua' THEN 1
-       WHEN 'Wakil' THEN 2
-       WHEN 'Pengurus' THEN 3
-       ELSE 4
-     END, m.level DESC`
+    `SELECT id, ign, role, pangkat, level, discord, joined_at, active
+     FROM v_members
+     ORDER BY role_order ASC, level DESC`
   );
 
   return NextResponse.json({ ok: true, members });
@@ -32,19 +44,34 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: "Body JSON tidak valid." }, { status: 400 });
   }
 
-  const ign = String(body.ign ?? "").trim();
+  const ign = normalizeText(body.ign);
   if (!ign) {
     return NextResponse.json({ ok: false, error: "In-game name (IGN) wajib diisi." }, { status: 400 });
   }
 
-  const role = String(body.role ?? "Member").trim() || "Member";
-  const pangkat = body.pangkat ? String(body.pangkat).trim() : null;
-  const discord = body.discord ? String(body.discord).trim() : null;
-  const joined_at = body.joined_at ? String(body.joined_at).trim() : null;
-  const levelRaw = Number(body.level);
-  const level = Number.isFinite(levelRaw) && levelRaw > 0 ? Math.floor(levelRaw) : null;
+  const role = normalizeText(body.role) || "Member";
+  const pangkat = normalizeNullable(body.pangkat);
+  const discord = normalizeDiscord(body.discord);
+  const level = normalizeLevel(body.level);
 
-  const existingIgn = await dbGet("SELECT id FROM members WHERE lower(ign) = lower(?)", ign);
+  let joined_at: string | null = null;
+  if (normalizeText(body.joined_at) !== "") {
+    joined_at = normalizeDate(body.joined_at);
+    if (!joined_at) {
+      return NextResponse.json(
+        { ok: false, error: "Tanggal bergabung tidak valid (format YYYY-MM-DD)." },
+        { status: 400 }
+      );
+    }
+  }
+
+  // Duplikat dicek lewat bentuk kanonik: "IGN", "ign", dan " ign " dianggap sama.
+  const ignKey = normalizeKey(ign);
+  const existingIgn = await dbGet(
+    "SELECT id FROM members WHERE ign_key = ? OR lower(ign) = ? LIMIT 1",
+    ignKey,
+    ignKey
+  );
   if (existingIgn) {
     return NextResponse.json({ ok: false, error: "IGN sudah terdaftar." }, { status: 409 });
   }
@@ -53,23 +80,36 @@ export async function POST(request: Request) {
   const rankId = pangkat ? await getRankId(pangkat) : null;
 
   const info = await dbRun(
-    "INSERT INTO members (ign, role_id, rank_id, level, discord, joined_at) VALUES (?, ?, ?, ?, ?, ?)",
+    `INSERT INTO members (ign, ign_key, role_id, rank_id, level, discord, discord_key, joined_at, created_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, datetime('now', 'localtime'))`,
     ign,
+    ignKey,
     roleId,
     rankId,
     level,
     discord,
+    discord ? normalizeKey(discord) : null,
     joined_at
   );
+
+  // DENORMALISASI: salinan role_name/rank_name diisi dari tabel lookup.
+  await syncMemberDenormalized(info.lastInsertRowid);
 
   const waLink = await getSetting("wa_group_link");
   const welcome = waLink
     ? `Selamat datang ${ign} sebagai ${role} di APX Alliance!\nGabung grup WhatsApp: ${waLink}`
     : `Selamat datang ${ign} sebagai ${role} di APX Alliance!`;
 
-  await dbRun("INSERT INTO announcements (title, content) VALUES (?, ?)", "Member Baru Bergabung 🎉", welcome);
+  const announcementTitle = "Member Baru Bergabung 🎉";
+  const announcementSlug = await makeUniqueSlug("announcements", `${announcementTitle} ${ign}`);
+  await dbRun(
+    "INSERT INTO announcements (title, slug, content) VALUES (?, ?, ?)",
+    announcementTitle,
+    announcementSlug,
+    welcome
+  );
 
-  await sendPushToAll("Member Baru Bergabung 🎉", welcome, "/berita");
+  await sendPushToAll(announcementTitle, welcome, "/berita");
 
   return NextResponse.json({ ok: true, id: info.lastInsertRowid });
 }

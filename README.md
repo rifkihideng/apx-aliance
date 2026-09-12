@@ -94,16 +94,81 @@ pakai Turso di production (fallback SQLite lokal hanya untuk development).
 
 ## Database
 
-Tabel yang dipakai:
+### Struktur (normalisasi)
 
-- `members` — daftar member (ign, role, pangkat, level, discord, joined_at, active)
+- `roles`, `ranks`, `event_types` — tabel lookup. `members.role_id`,
+  `members.rank_id`, dan `events.type_id` memakai foreign key, jadi nama role
+  tidak diulang-ulang di setiap baris member
+- `members` — roster (ign, role_id, rank_id, level, discord, joined_at, active)
 - `applications` — lamaran masuk dari formulir rekrutmen
 - `announcements` — berita/pengumuman
 - `events` — jadwal war & event
 - `push_subscriptions` — subscription notifikasi push
 - `settings` — pengaturan (misal link grup WhatsApp)
 
-Database otomatis di-seed dengan data contoh saat pertama kali dijalankan.
+### Normalisasi teks
+
+Semua input dibersihkan lewat `src/lib/normalize.ts` sebelum disimpan: Unicode
+disamakan (NFC), spasi berlebih & karakter tak terlihat dibuang, dan huruf
+diseragamkan sesuai jenis datanya.
+
+Setiap nilai yang harus unik punya kolom `*_key` (bentuk kanonik huruf kecil)
+dengan UNIQUE index, sehingga "Ketua", "ketua", dan " KETUA " dijamin menjadi
+satu baris saja:
+
+| Tabel | Kolom kanonik | Fungsinya |
+| --- | --- | --- |
+| `roles` / `ranks` / `event_types` | `name_key` | mencegah role/pangkat/tipe kembar |
+| `members` | `ign_key` | menolak IGN dobel (beda huruf besar/kecil pun ditolak) |
+| `members` | `discord_key` | pencarian tanpa membedakan huruf besar/kecil |
+| `applications` | `ign_key` | satu IGN hanya boleh punya satu lamaran `pending` |
+| `announcements` / `events` | `slug` | URL ramah SEO: `judul`, `judul-2`, `judul-3`, ... |
+
+Contoh pemakaian:
+
+```ts
+import {
+  normalizeText,
+  normalizeKey,
+  normalizeDate,
+  normalizeTime,
+  normalizeUrl,
+  slugify,
+} from "@/lib/normalize";
+
+normalizeText("  Ketua   APX  "); // "Ketua APX"
+normalizeKey("  Ketua APX  ");    // "ketua apx"
+normalizeDate("2026-02-31");      // null (tanggal tidak ada di kalender)
+normalizeTime("20:00:00");        // "20:00"
+slugify("War Wilayah!!");         // "war-wilayah"
+```
+
+### Denormalisasi (performa baca)
+
+Kolom `members.role_name`, `members.rank_name`, dan `events.type_name` menyimpan
+**salinan** nama dari tabel lookup supaya halaman yang paling sering dibuka bisa
+dibaca tanpa JOIN:
+
+- `v_members` — roster lengkap dengan `role_order` (Ketua → Wakil → Pengurus →
+  Member) yang sudah dihitung di view
+- `v_events` — jadwal lengkap dengan nama tipe event
+
+Salinan ini tidak pernah basi: setiap penulisan memanggil
+`syncMemberDenormalized()` / `syncEventDenormalized()`, dan saat aplikasi start
+`resyncDenormalized()` menyegarkan seluruh baris sekaligus. Kalau nama role diubah
+langsung di database (di luar aplikasi), panggil `resyncDenormalized()` atau
+restart aplikasi.
+
+Verifikasi hasil normalisasi & denormalisasi:
+
+```bash
+node check-db.js
+```
+
+`DENORM_BASI_MEMBERS` dan `DENORM_BASI_EVENTS` harus bernilai `0`.
+
+Database otomatis dimigrasi & di-seed saat pertama kali dijalankan. Migrasinya
+idempotent, jadi aman dijalankan berkali-kali di database yang sudah berisi data.
 Folder `data/` sudah di-`.gitignore`.
 
 ## Keamanan

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
-import { dbGet, dbRun } from "@/lib/db";
+import { dbGet, dbRun, makeUniqueSlug } from "@/lib/db";
 import { isAdminRequest } from "@/lib/admin-server";
+import { normalizeMultiline, normalizeText } from "@/lib/normalize";
 
 type RouteContext = { params: Promise<{ id: string }> };
 
@@ -26,16 +27,18 @@ export async function PATCH(request: Request, { params }: RouteContext) {
   const fields: string[] = [];
   const values: unknown[] = [];
 
+  let newTitle: string | null = null;
+
   if (body.title !== undefined) {
-    const title = String(body.title).trim();
-    if (!title) {
+    newTitle = normalizeText(body.title);
+    if (!newTitle) {
       return NextResponse.json({ ok: false, error: "Judul tidak boleh kosong." }, { status: 400 });
     }
     fields.push("title = ?");
-    values.push(title);
+    values.push(newTitle);
   }
   if (body.content !== undefined) {
-    const content = String(body.content).trim();
+    const content = normalizeMultiline(body.content);
     if (!content) {
       return NextResponse.json({ ok: false, error: "Isi berita tidak boleh kosong." }, { status: 400 });
     }
@@ -47,8 +50,17 @@ export async function PATCH(request: Request, { params }: RouteContext) {
     return NextResponse.json({ ok: false, error: "Tidak ada perubahan." }, { status: 400 });
   }
 
+  // Slug mengikuti judul, dibuat ulang saat judul berubah.
+  if (newTitle !== null) {
+    fields.push("slug = ?");
+    values.push(await makeUniqueSlug("announcements", newTitle, id));
+  }
+
   values.push(id);
-  const info = await dbRun(`UPDATE announcements SET ${fields.join(", ")} WHERE id = ?`, ...values);
+  const info = await dbRun(
+    `UPDATE announcements SET ${fields.join(", ")}, updated_at = datetime('now', 'localtime') WHERE id = ?`,
+    ...values
+  );
   return NextResponse.json({ ok: true, changes: info.changes });
 }
 

@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
-import { dbAll, dbRun } from "@/lib/db";
+import { dbAll, dbRun, makeUniqueSlug } from "@/lib/db";
 import { isAdminRequest } from "@/lib/admin-server";
 import { sendPushToAll } from "@/lib/push";
+import { normalizeMultiline, normalizeText } from "@/lib/normalize";
 
 export async function GET() {
   const announcements = await dbAll(
@@ -22,8 +23,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: "Body JSON tidak valid." }, { status: 400 });
   }
 
-  const title = String(body.title ?? "").trim();
-  const content = String(body.content ?? "").trim();
+  const title = normalizeText(body.title);
+  const content = normalizeMultiline(body.content);
 
   if (!title) {
     return NextResponse.json({ ok: false, error: "Judul wajib diisi." }, { status: 400 });
@@ -32,9 +33,15 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: "Isi berita wajib diisi." }, { status: 400 });
   }
 
-  const info = await dbRun("INSERT INTO announcements (title, content) VALUES (?, ?)", title, content);
+  const slug = await makeUniqueSlug("announcements", title);
+  const info = await dbRun(
+    "INSERT INTO announcements (title, slug, content) VALUES (?, ?, ?)",
+    title,
+    slug,
+    content
+  );
 
   await sendPushToAll(`📢 ${title}`, content, "/berita");
 
-  return NextResponse.json({ ok: true, id: info.lastInsertRowid });
+  return NextResponse.json({ ok: true, id: info.lastInsertRowid, slug });
 }

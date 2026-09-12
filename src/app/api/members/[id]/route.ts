@@ -1,6 +1,14 @@
 import { NextResponse } from "next/server";
-import { dbGet, dbRun, getRoleId, getRankId } from "@/lib/db";
+import { dbGet, dbRun, getRoleId, getRankId, syncMemberDenormalized } from "@/lib/db";
 import { isAdminRequest } from "@/lib/admin-server";
+import {
+  normalizeDate,
+  normalizeDiscord,
+  normalizeKey,
+  normalizeLevel,
+  normalizeNullable,
+  normalizeText,
+} from "@/lib/normalize";
 
 type RouteContext = { params: Promise<{ id: string }> };
 
@@ -32,34 +40,63 @@ export async function PATCH(request: Request, { params }: RouteContext) {
   };
 
   if (body.ign !== undefined) {
-    const ign = String(body.ign).trim();
+    const ign = normalizeText(body.ign);
     if (!ign) {
       return NextResponse.json({ ok: false, error: "In-game name (IGN) tidak boleh kosong." }, { status: 400 });
     }
-    const dup = await dbGet("SELECT id FROM members WHERE lower(ign) = lower(?) AND id != ?", ign, id);
+
+    const ignKey = normalizeKey(ign);
+    const dup = await dbGet(
+      "SELECT id FROM members WHERE (ign_key = ? OR lower(ign) = ?) AND id != ? LIMIT 1",
+      ignKey,
+      ignKey,
+      id
+    );
     if (dup) {
       return NextResponse.json({ ok: false, error: "IGN sudah terdaftar." }, { status: 409 });
     }
+
     set("ign", ign);
+    set("ign_key", ignKey);
   }
-  if (body.role !== undefined) set("role_id", await getRoleId(String(body.role).trim() || "Member"));
+  if (body.role !== undefined) set("role_id", await getRoleId(normalizeText(body.role) || "Member"));
   if (body.pangkat !== undefined) {
-    const pangkat = body.pangkat ? String(body.pangkat).trim() : null;
+    const pangkat = normalizeNullable(body.pangkat);
     set("rank_id", pangkat ? await getRankId(pangkat) : null);
   }
-  if (body.discord !== undefined) set("discord", body.discord ? String(body.discord).trim() : null);
-  if (body.joined_at !== undefined) set("joined_at", body.joined_at ? String(body.joined_at).trim() : null);
-  if (body.level !== undefined) {
-    const levelRaw = Number(body.level);
-    set("level", Number.isFinite(levelRaw) && levelRaw > 0 ? Math.floor(levelRaw) : null);
+  if (body.discord !== undefined) {
+    const discord = normalizeDiscord(body.discord);
+    set("discord", discord);
+    set("discord_key", discord ? normalizeKey(discord) : null);
   }
+  if (body.joined_at !== undefined) {
+    if (normalizeText(body.joined_at) === "") {
+      set("joined_at", null);
+    } else {
+      const joined = normalizeDate(body.joined_at);
+      if (!joined) {
+        return NextResponse.json(
+          { ok: false, error: "Tanggal bergabung tidak valid (format YYYY-MM-DD)." },
+          { status: 400 }
+        );
+      }
+      set("joined_at", joined);
+    }
+  }
+  if (body.level !== undefined) set("level", normalizeLevel(body.level));
 
   if (fields.length === 0) {
     return NextResponse.json({ ok: false, error: "Tidak ada perubahan." }, { status: 400 });
   }
 
   values.push(id);
-  const info = await dbRun(`UPDATE members SET ${fields.join(", ")} WHERE id = ?`, ...values);
+  const info = await dbRun(
+    `UPDATE members SET ${fields.join(", ")}, updated_at = datetime('now', 'localtime') WHERE id = ?`,
+    ...values
+  );
+
+  // DENORMALISASI: segarkan salinan role_name/rank_name setelah perubahan.
+  if (info.changes > 0) await syncMemberDenormalized(id);
 
   return NextResponse.json({ ok: true, changes: info.changes });
 }
