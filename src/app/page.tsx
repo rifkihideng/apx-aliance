@@ -5,6 +5,7 @@ import { translate as t, monthNames, type Lang } from "@/i18n/dictionaries";
 import Reveal from "@/components/Reveal";
 import Parallax from "@/components/Parallax";
 import Countdown from "@/components/Countdown";
+import Counter from "@/components/Counter";
 import Intro from "@/components/Intro";
 import { formatTimeZones } from "@/lib/time";
 
@@ -46,28 +47,39 @@ export default async function Home() {
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.04)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.04)_1px,transparent_1px)] bg-[size:52px_52px] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_40%,black,transparent)]"
         />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-emerald-400/60 to-transparent"
+        />
         <div className="relative mx-auto max-w-6xl px-4 py-24 sm:px-6 sm:py-32">
-          <p className="animate-fade-up text-sm font-semibold uppercase tracking-widest text-emerald-400">
+          <div className="animate-fade-up inline-flex items-center gap-2.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-emerald-300">
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
+            </span>
             {tr("home.tagline")}
-          </p>
-          <h1 className="animate-fade-up mt-4 text-4xl font-black tracking-tight sm:text-6xl md:text-7xl">
-            APX <span className="text-gradient">ALLIANCE</span>
+          </div>
+          <h1 className="animate-fade-up mt-6 text-5xl font-black leading-[0.95] tracking-tight sm:text-7xl md:text-8xl">
+            APX{" "}
+            <span className="text-gradient drop-shadow-[0_0_28px_rgba(16,185,129,0.45)]">
+              ALLIANCE
+            </span>
           </h1>
-          <p className="animate-fade-up mt-6 max-w-2xl text-lg text-zinc-400">
+          <p className="animate-fade-up mt-6 max-w-2xl text-lg leading-relaxed text-zinc-400">
             {tr("home.subtitle")}
           </p>
-          <div className="animate-fade-up mt-8 flex flex-wrap gap-4">
+          <div className="animate-fade-up mt-9 flex flex-wrap gap-4">
             <Link
               href="/rekrut"
-              className="btn-primary rounded-lg px-6 py-3 font-semibold text-emerald-950"
+              className="btn-primary rounded-lg px-7 py-3 font-semibold text-emerald-950 shadow-lg shadow-emerald-500/25 transition-transform hover:-translate-y-0.5"
             >
               {tr("home.join")}
             </Link>
             <Link
               href="/roster"
-              className="rounded-lg border border-zinc-700 px-6 py-3 font-semibold text-zinc-200 transition-colors hover:border-emerald-400 hover:text-emerald-400"
+              className="rounded-lg border border-zinc-700 bg-zinc-900/40 px-7 py-3 font-semibold text-zinc-200 backdrop-blur transition-colors hover:border-emerald-400 hover:text-emerald-400"
             >
-              {tr("home.roster")}
+              {tr("home.roster")} →
             </Link>
           </div>
         </div>
@@ -84,7 +96,7 @@ export default async function Home() {
           <div className="mx-auto grid max-w-6xl grid-cols-2 gap-6 px-4 py-10 sm:px-6 md:grid-cols-4">
             <Stat label={tr("home.totalMember")} value={total} icon={<UsersIcon />} />
             <Stat label={tr("home.activeMember")} value={aktif} icon={<ActivityIcon />} />
-            <Stat label={tr("home.server")} value="20" icon={<ServerIcon />} />
+            <Stat label={tr("home.server")} value={20} icon={<ServerIcon />} />
             <Stat label={tr("home.rank")} value="Top 2" icon={<TrophyIcon />} />
           </div>
         </Reveal>
@@ -149,12 +161,22 @@ function formatEventDate(date: string, lang: Lang) {
 
 function Stat({ label, value, icon }: { label: string; value: string | number; icon: React.ReactNode }) {
   return (
-    <div className="card-lift rounded-xl border border-zinc-800 bg-zinc-950 p-6 text-center">
-      <div className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-400" aria-hidden="true">
+    <div className="card-lift group relative overflow-hidden rounded-xl border border-zinc-800 bg-zinc-950 p-6 text-center transition-colors hover:border-emerald-500/40">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-emerald-400/60 to-transparent opacity-0 transition-opacity group-hover:opacity-100"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -top-10 left-1/2 h-20 w-32 -translate-x-1/2 rounded-full bg-emerald-500/10 blur-2xl opacity-0 transition-opacity group-hover:opacity-100"
+      />
+      <div className="relative mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-400 ring-1 ring-inset ring-emerald-500/20" aria-hidden="true">
         {icon}
       </div>
-      <p className="text-3xl font-black text-emerald-400">{value}</p>
-      <p className="mt-1 text-sm text-zinc-400">{label}</p>
+      <p className="relative text-3xl font-black text-emerald-400 sm:text-4xl">
+        {typeof value === "number" ? <Counter value={value} /> : value}
+      </p>
+      <p className="relative mt-1 text-sm text-zinc-400">{label}</p>
     </div>
   );
 }
