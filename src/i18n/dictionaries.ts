@@ -246,17 +246,11 @@ export const dictionaries: Record<Lang, Dict> = {
     "admin.apps.updateFail": "Gagal memperbarui status.",
 
     "admin.wa.title": "Pengaturan",
-    "admin.wa.label": "Link Grup WhatsApp",
     "admin.wa.desc": "Link grup WhatsApp akan otomatis dikirim ke pendaftar yang disetujui.",
-    "admin.wa.placeholder": "https://chat.whatsapp.com/...",
     "admin.wa.save": "Simpan",
     "admin.wa.saving": "Menyimpan...",
     "admin.wa.saved": "Link tersimpan. ✅",
     "admin.wa.fail": "Gagal menyimpan.",
-    "admin.discord.label": "Link Server Discord",
-    "admin.discord.desc": "Ditampilkan di footer website.",
-    "admin.discord.placeholder": "https://discord.gg/...",
-    "footer.discord": "Gabung Discord",
   },
   en: {
     "nav.home": "Home",
@@ -501,17 +495,11 @@ export const dictionaries: Record<Lang, Dict> = {
     "admin.apps.updateFail": "Failed to update status.",
 
     "admin.wa.title": "Settings",
-    "admin.wa.label": "WhatsApp Group Link",
     "admin.wa.desc": "The WhatsApp group link will be sent automatically to accepted applicants.",
-    "admin.wa.placeholder": "https://chat.whatsapp.com/...",
     "admin.wa.save": "Save",
     "admin.wa.saving": "Saving...",
     "admin.wa.saved": "Link saved. ✅",
     "admin.wa.fail": "Failed to save.",
-    "admin.discord.label": "Discord Server Link",
-    "admin.discord.desc": "Shown in the website footer.",
-    "admin.discord.placeholder": "https://discord.gg/...",
-    "footer.discord": "Join Discord",
   },
 };
 

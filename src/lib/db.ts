@@ -361,9 +361,6 @@ async function seedExtras(db: Client) {
   await db.execute(
     "INSERT OR IGNORE INTO settings (key, value, updated_at) VALUES ('wa_group_link', '', datetime('now', 'localtime'))"
   );
-  await db.execute(
-    "INSERT OR IGNORE INTO settings (key, value, updated_at) VALUES ('discord_link', '', datetime('now', 'localtime'))"
-  );
 }
 
 const DEFAULT_ROLES = ["Ketua", "Wakil", "Pengurus", "Member"];

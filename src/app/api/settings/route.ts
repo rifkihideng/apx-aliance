@@ -8,13 +8,10 @@ export async function GET() {
     return NextResponse.json({ ok: false, error: "Unauthorized." }, { status: 401 });
   }
 
-  const [wa_group_link, discord_link] = await Promise.all([
-    getSetting("wa_group_link"),
-    getSetting("discord_link"),
-  ]);
+  const wa_group_link = await getSetting("wa_group_link");
   return NextResponse.json({
     ok: true,
-    settings: { wa_group_link, discord_link },
+    settings: { wa_group_link },
   });
 }
 
@@ -30,44 +27,17 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: "Body JSON tidak valid." }, { status: 400 });
   }
 
-  const updates: Record<string, string> = {};
+  const raw = normalizeText(body.wa_group_link);
+  const link = normalizeUrl(body.wa_group_link);
 
-  if (body.wa_group_link !== undefined) {
-    const raw = normalizeText(body.wa_group_link);
-    const link = normalizeUrl(body.wa_group_link);
-    if (raw && !link) {
-      return NextResponse.json(
-        { ok: false, error: "Link grup harus berupa URL https yang valid." },
-        { status: 400 }
-      );
-    }
-    updates.wa_group_link = link ?? "";
+  if (raw && !link) {
+    return NextResponse.json(
+      { ok: false, error: "Link grup harus berupa URL https yang valid." },
+      { status: 400 }
+    );
   }
 
-  if (body.discord_link !== undefined) {
-    const raw = normalizeText(body.discord_link);
-    const link = normalizeUrl(body.discord_link);
-    if (raw && !link) {
-      return NextResponse.json(
-        { ok: false, error: "Link Discord harus berupa URL https yang valid." },
-        { status: 400 }
-      );
-    }
-    updates.discord_link = link ?? "";
-  }
+  await setSetting("wa_group_link", link ?? "");
 
-  for (const [key, value] of Object.entries(updates)) {
-    await setSetting(key, value);
-  }
-
-  const wa_group_link =
-    updates.wa_group_link !== undefined
-      ? updates.wa_group_link
-      : await getSetting("wa_group_link");
-  const discord_link =
-    updates.discord_link !== undefined
-      ? updates.discord_link
-      : await getSetting("discord_link");
-
-  return NextResponse.json({ ok: true, wa_group_link, discord_link });
+  return NextResponse.json({ ok: true, wa_group_link: link ?? "" });
 }
