@@ -10,6 +10,7 @@ import {
   normalizeTime,
   slugify,
 } from "./normalize";
+import { dictionaries } from "@/i18n/dictionaries";
 
 const globalForDb = globalThis as unknown as {
   _apxDb?: Client;
@@ -181,6 +182,17 @@ const SCHEMA = [
   `CREATE TABLE IF NOT EXISTS settings (
     key TEXT PRIMARY KEY,
     value TEXT,
+    updated_at TEXT
+  )`,
+  `CREATE TABLE IF NOT EXISTS site_content (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    section TEXT NOT NULL,
+    position INTEGER NOT NULL DEFAULT 0,
+    title_id TEXT NOT NULL,
+    title_en TEXT,
+    body_id TEXT,
+    body_en TEXT,
+    created_at TEXT,
     updated_at TEXT
   )`,
 ];
@@ -363,6 +375,51 @@ async function seedExtras(db: Client) {
   );
 }
 
+async function seedContent(db: Client) {
+  const count = await db.execute("SELECT COUNT(*) AS c FROM site_content");
+  if (Number(count.rows[0].c) > 0) return;
+
+  const rows: {
+    section: string;
+    position: number;
+    title_id: string;
+    title_en: string;
+    body_id: string;
+    body_en: string;
+  }[] = [];
+
+  for (let i = 1; i <= 6; i++) {
+    rows.push({
+      section: "faq",
+      position: i,
+      title_id: dictionaries.id[`faq.q${i}`] ?? "",
+      title_en: dictionaries.en[`faq.q${i}`] ?? "",
+      body_id: dictionaries.id[`faq.a${i}`] ?? "",
+      body_en: dictionaries.en[`faq.a${i}`] ?? "",
+    });
+  }
+  for (let i = 1; i <= 6; i++) {
+    rows.push({
+      section: "rules",
+      position: i,
+      title_id: dictionaries.id[`rules.${i}.title`] ?? "",
+      title_en: dictionaries.en[`rules.${i}.title`] ?? "",
+      body_id: dictionaries.id[`rules.${i}.desc`] ?? "",
+      body_en: dictionaries.en[`rules.${i}.desc`] ?? "",
+    });
+  }
+
+  const createdAt = new Date().toISOString();
+  await db.batch(
+    rows.map((r) => ({
+      sql: `INSERT INTO site_content (section, position, title_id, title_en, body_id, body_en, created_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      args: [r.section, r.position, r.title_id, r.title_en, r.body_id, r.body_en, createdAt],
+    })),
+    "write"
+  );
+}
+
 const DEFAULT_ROLES = ["Ketua", "Wakil", "Pengurus", "Member"];
 const DEFAULT_RANKS = ["R5", "R4", "Caporegime", "Soldato", "Associate"];
 const DEFAULT_EVENT_TYPES = ["event", "rapat", "perebutan", "perang"];
@@ -396,6 +453,7 @@ const INDEXES = [
   `CREATE INDEX IF NOT EXISTS idx_announcements_created_at ON announcements(created_at)`,
   `CREATE INDEX IF NOT EXISTS idx_applications_status ON applications(status)`,
   `CREATE INDEX IF NOT EXISTS idx_push_subscriptions_endpoint ON push_subscriptions(endpoint)`,
+  `CREATE INDEX IF NOT EXISTS idx_site_content_section ON site_content(section, position)`,
 ];
 
 /**
@@ -732,6 +790,7 @@ async function initDb(): Promise<void> {
   await db.batch(VIEWS, "write"); // 10. view jalur baca cepat
   await seedMembers(db); // 11. data contoh
   await seedExtras(db);
+  await seedContent(db); // 12. konten FAQ & aturan bawaan
 }
 
 const DB_RETRY_ATTEMPTS = 3;

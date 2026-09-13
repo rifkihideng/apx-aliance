@@ -10,6 +10,8 @@ const links = [
   { href: "/admin/member", key: "admin.nav.members" },
   { href: "/admin/berita", key: "admin.nav.news" },
   { href: "/admin/jadwal", key: "admin.nav.schedule" },
+  { href: "/admin/faq", key: "admin.nav.faq" },
+  { href: "/admin/aturan", key: "admin.nav.rules" },
 ];
 
 export default function AdminNav({ lang }: { lang: Lang }) {

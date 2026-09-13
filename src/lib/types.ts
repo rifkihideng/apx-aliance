@@ -41,3 +41,13 @@ export type EventItem = {
   created_at: string;
   updated_at?: string | null;
 };
+
+export type ContentItem = {
+  id: number;
+  section: string;
+  position: number;
+  title_id: string;
+  title_en: string | null;
+  body_id: string | null;
+  body_en: string | null;
+};
