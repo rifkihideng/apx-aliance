@@ -10,12 +10,17 @@ const WORDS: Record<Lang, string[]> = {
 };
 
 export default function Intro({ lang }: { lang: Lang }) {
+  const [container, setContainer] = useState<HTMLElement | null>(null);
   const [wordIndex, setWordIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
   const [gone, setGone] = useState(false);
 
-  // `document` tidak tersedia saat SSR; portal hanya dirender di klien.
-  const container = typeof document !== "undefined" ? document.body : null;
+  useEffect(() => {
+    // Portal harus dipasang setelah mount supaya HTML server & klien identik
+    // (menghindari hydration mismatch). Ini pola yang disarankan React untuk portal.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setContainer(document.body);
+  }, []);
 
   useEffect(() => {
     if (!container) return;
