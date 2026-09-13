@@ -17,6 +17,15 @@ export const dictionaries: Record<Lang, Dict> = {
 
     "footer.disclaimer": "Website aliansi ini tidak berafiliasi resmi dengan pengembang game.",
 
+    "common.loading": "Memuat...",
+    "error.title": "Terjadi Kesalahan",
+    "error.desc": "Maaf, terjadi kesalahan tak terduga. Silakan coba lagi.",
+    "error.retry": "Coba Lagi",
+    "error.home": "Kembali ke Beranda",
+    "notFound.title": "Halaman Tidak Ditemukan",
+    "notFound.desc": "Halaman yang kamu cari tidak ada atau sudah dipindahkan.",
+    "notFound.home": "Kembali ke Beranda",
+
     "home.tagline": "Narco Empire — Aliansi",
     "home.subtitle":
       "Bangun kekaisaran, kuasai wilayah, dan taklukkan rival. APX adalah aliansi elit di Narco Empire yang menjunjung solidaritas, strategi, dan dominasi.",
@@ -295,6 +304,15 @@ export const dictionaries: Record<Lang, Dict> = {
     "nav.openMenu": "Open menu",
 
     "footer.disclaimer": "This alliance website is not officially affiliated with the game developer.",
+
+    "common.loading": "Loading...",
+    "error.title": "Something Went Wrong",
+    "error.desc": "Sorry, an unexpected error occurred. Please try again.",
+    "error.retry": "Try Again",
+    "error.home": "Back to Home",
+    "notFound.title": "Page Not Found",
+    "notFound.desc": "The page you're looking for doesn't exist or has been moved.",
+    "notFound.home": "Back to Home",
 
     "home.tagline": "Narco Empire — Alliance",
     "home.subtitle":

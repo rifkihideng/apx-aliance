@@ -6,7 +6,7 @@ import { translate as t } from "@/i18n/dictionaries";
 
 export async function generateMetadata(): Promise<Metadata> {
   const lang = await getLang();
-  return { title: t(lang, "admin.member.title") };
+  return { title: t(lang, "admin.member.title"), robots: { index: false, follow: false } };
 }
 
 export default async function AdminMemberPage() {
