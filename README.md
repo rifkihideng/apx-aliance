@@ -59,6 +59,11 @@ TURSO_AUTH_TOKEN=
 # Kunci privat VAPID untuk web push (generate via `npx web-push generate-vapid-keys`)
 VAPID_PRIVATE_KEY=
 
+# Opsional — rate limiter persisten via Upstash Redis (REST).
+# Kalau kosong, otomatis fallback ke in-memory (cukup untuk development).
+UPSTASH_REDIS_REST_URL=
+UPSTASH_REDIS_REST_TOKEN=
+
 # Opsional — URL publik situs untuk sitemap/OG.
 # Di Vercel bisa dikosongkan karena otomatis memakai VERCEL_PROJECT_PRODUCTION_URL,
 # tapi disarankan di-set ke domain utama, mis. https://apx.example.com
@@ -81,6 +86,8 @@ memakai file SQLite lokal di `data/apx.db`.
    | `TURSO_DATABASE_URL` | `libsql://...` |
    | `TURSO_AUTH_TOKEN` | token Turso |
    | `VAPID_PRIVATE_KEY` | private key web push |
+   | `UPSTASH_REDIS_REST_URL` | URL REST Upstash Redis (opsional) |
+   | `UPSTASH_REDIS_REST_TOKEN` | token REST Upstash Redis (opsional) |
    | `NEXT_PUBLIC_SITE_URL` | `https://domain-kamu` (opsional) |
 
    > Vercel **tidak** menyediakan env `URL` seperti Netlify, jadi pastikan
@@ -91,6 +98,25 @@ memakai file SQLite lokal di `data/apx.db`.
 
 Catatan penting: filesystem Vercel bersifat read-only/ephemeral, jadi **wajib**
 pakai Turso di production (fallback SQLite lokal hanya untuk development).
+
+## Testing
+
+Unit test memakai [Vitest](https://vitest.dev/). Jalankan sekali:
+
+```bash
+npm run test
+```
+
+Mode watch (untuk development):
+
+```bash
+npm run test:watch
+```
+
+## CI (GitHub Actions)
+
+Workflow di `.github/workflows/ci.yml` otomatis menjalankan **lint**, **unit test**,
+dan **build** di setiap push ke `main` dan setiap pull request.
 
 ## Database
 

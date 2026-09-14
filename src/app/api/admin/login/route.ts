@@ -32,7 +32,7 @@ export async function POST(request: Request) {
 
   const password = String(body.password ?? "");
   if (!verifyAdminPassword(password)) {
-    const rl = rateLimit(`login-fail:${ip}`, 5, 15 * 60 * 1000);
+    const rl = await rateLimit(`login-fail:${ip}`, 5, 15 * 60 * 1000);
     if (!rl.allowed) {
       return NextResponse.json(
         { ok: false, error: "Terlalu banyak percobaan login. Coba lagi 15 menit lagi." },
@@ -42,7 +42,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: "Password salah." }, { status: 401 });
   }
 
-  clearRateLimit(`login-fail:${ip}`);
+  await clearRateLimit(`login-fail:${ip}`);
 
   const token = await createAdminToken();
   const res = NextResponse.json({ ok: true });

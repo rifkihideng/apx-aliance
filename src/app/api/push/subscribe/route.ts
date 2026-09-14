@@ -4,7 +4,7 @@ import { getClientIp, rateLimit } from "@/lib/rate-limit";
 
 export async function POST(request: Request) {
   const ip = getClientIp(request);
-  const rl = rateLimit(`push-sub:${ip}`, 20, 10 * 60 * 1000);
+  const rl = await rateLimit(`push-sub:${ip}`, 20, 10 * 60 * 1000);
   if (!rl.allowed) {
     return NextResponse.json(
       { ok: false, error: "Terlalu banyak permintaan. Coba lagi nanti." },
@@ -43,7 +43,7 @@ export async function POST(request: Request) {
 
 export async function DELETE(request: Request) {
   const ip = getClientIp(request);
-  const rl = rateLimit(`push-unsub:${ip}`, 20, 10 * 60 * 1000);
+  const rl = await rateLimit(`push-unsub:${ip}`, 20, 10 * 60 * 1000);
   if (!rl.allowed) {
     return NextResponse.json(
       { ok: false, error: "Terlalu banyak permintaan. Coba lagi nanti." },

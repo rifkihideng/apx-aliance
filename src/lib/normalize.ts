@@ -49,6 +49,9 @@ export function normalizeMultiline(value: unknown): string {
     .replace(/\r\n?/g, "\n")
     .replace(/[^\S\n]+/g, " ") // spasi/tab berlebih, newline tetap
     .replace(/\n{3,}/g, "\n\n")
+    .split("\n")
+    .map((line) => line.trim())
+    .join("\n")
     .trim();
 }
 
@@ -66,7 +69,8 @@ export function normalizeDiscord(value: unknown): string | null {
   if (!text) return null;
 
   const withoutUrl = text
-    .replace(/^https?:\/\/(www\.)?(discord\.(gg|com)\/)?/i, "")
+    .replace(/^(?:https?:\/\/)?(?:www\.)?discord\.(gg|com)\//i, "")
+    .replace(/^(users|invite|channels)\//i, "")
     .replace(/^@/, "");
 
   const cleaned = normalizeText(withoutUrl).toLowerCase();

@@ -7,7 +7,7 @@ export type TimeZones = {
 
 export function convertTimeZones(time: string | null | undefined): TimeZones | null {
   if (!time) return null;
-  const match = /^(\d{2}):(\d{2})$/.exec(time.trim());
+  const match = /^([01]\d|2[0-3]):([0-5]\d)$/.exec(time.trim());
   if (!match) return null;
 
   const h = Number(match[1]);

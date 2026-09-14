@@ -35,6 +35,10 @@ export const metadata: Metadata = {
     template: "%s | APX Alliance",
   },
   description: "Website resmi aliansi APX di game Narco Empire.",
+  icons: {
+    icon: "/icon.svg",
+    apple: "/icon.svg",
+  },
   openGraph: {
     type: "website",
     locale: "id_ID",

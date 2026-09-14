@@ -11,7 +11,7 @@ import {
 
 export async function POST(request: Request) {
   const ip = getClientIp(request);
-  const rl = rateLimit(`apply:${ip}`, 5, 10 * 60 * 1000);
+  const rl = await rateLimit(`apply:${ip}`, 5, 10 * 60 * 1000);
   if (!rl.allowed) {
     return NextResponse.json(
       { ok: false, error: "Terlalu banyak percobaan. Coba lagi beberapa menit lagi." },
