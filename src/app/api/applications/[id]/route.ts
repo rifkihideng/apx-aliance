@@ -97,8 +97,8 @@ export async function PATCH(request: Request, { params }: RouteContext) {
     const title = "Member Baru Bergabung 🎉";
     const waLink = await getSetting("wa_group_link");
     const content = waLink
-      ? `Selamat datang ${ign} sebagai Member di APX Alliance!\nGabung grup WhatsApp: ${waLink}`
-      : `Selamat datang ${ign} sebagai Member di APX Alliance!`;
+      ? `Selamat datang ${ign} sebagai Member di APEX RISE!\nGabung grup WhatsApp: ${waLink}`
+      : `Selamat datang ${ign} sebagai Member di APEX RISE!`;
 
     const slug = await makeUniqueSlug("announcements", `${title} ${ign}`);
     await dbRun(

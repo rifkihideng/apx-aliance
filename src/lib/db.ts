@@ -294,7 +294,7 @@ async function seedExtras(db: Client) {
     const rows = [
       {
         title: "Selamat Datang di Website Baru APX",
-        content: "Website resmi aliansi APX kini hadir dengan fitur roster, rekrutmen, dan jadwal event.",
+        content: "Website resmi aliansi APEX RISE kini hadir dengan fitur roster, rekrutmen, dan jadwal event.",
       },
       {
         title: "Rekrutmen Terbuka",

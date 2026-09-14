@@ -8,7 +8,7 @@ import Link from "next/link";
 export const dynamic = "force-dynamic";
 export const metadata = {
   title: "Berita",
-  description: "Berita dan pengumuman terbaru dari aliansi APX.",
+  description: "Berita dan pengumuman terbaru dari aliansi APEX RISE.",
 };
 
 export default async function BeritaPage() {

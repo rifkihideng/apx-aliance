@@ -19,8 +19,8 @@ const RULES: Rule[] = [
   {
     keywords: ["halo", "hai", "hi", "hello", "hey", "pagi", "siang", "sore", "malam", "morning", "afternoon", "evening"],
     text: {
-      id: "Halo! 👋 Aku APX Bot, asisten virtual aliansi APX. Mau tanya soal rekrutmen, jadwal war, roster, atau aturan?",
-      en: "Hello! 👋 I'm APX Bot, the virtual assistant of the APX alliance. Want to ask about recruitment, war schedule, roster, or rules?",
+      id: "Halo! 👋 Aku APEX RISE Bot, asisten virtual aliansi APEX RISE. Mau tanya soal rekrutmen, jadwal war, roster, atau aturan?",
+      en: "Hello! 👋 I'm APEX RISE Bot, the virtual assistant of the APEX RISE alliance. Want to ask about recruitment, war schedule, roster, or rules?",
     },
   },
   {
@@ -44,8 +44,8 @@ const RULES: Rule[] = [
   {
     keywords: ["discord", "wajib discord", "server discord"],
     text: {
-      id: "Ya, Discord wajib. Semua koordinasi war, pengumuman, dan pembagian tugas dilakukan di server Discord APX.",
-      en: "Yes, Discord is mandatory. All war coordination, announcements, and task assignments happen on the APX Discord server.",
+      id: "Ya, Discord wajib. Semua koordinasi war, pengumuman, dan pembagian tugas dilakukan di server Discord APEX RISE.",
+      en: "Yes, Discord is mandatory. All war coordination, announcements, and task assignments happen on the APEX RISE Discord server.",
     },
   },
   {
@@ -71,8 +71,8 @@ const RULES: Rule[] = [
   {
     keywords: ["roster", "member", "anggota", "daftar member", "list member"],
     text: {
-      id: "Daftar member APX ada di halaman Roster. Kamu bisa mencari nama atau pangkat di sana.",
-      en: "The APX member list is on the Roster page. You can search by name or rank there.",
+      id: "Daftar member APEX RISE ada di halaman Roster. Kamu bisa mencari nama atau pangkat di sana.",
+      en: "The APEX RISE member list is on the Roster page. You can search by name or rank there.",
     },
     links: {
       id: [{ label: "Lihat Roster", href: "/roster" }],
@@ -125,20 +125,20 @@ const RULES: Rule[] = [
   {
     keywords: ["admin", "kontak", "pengurus", "contact", "hubungi", "cs"],
     text: {
-      id: "Untuk pertanyaan lebih lanjut, silakan hubungi pengurus lewat server Discord APX.",
-      en: "For further questions, please contact the leaders on the APX Discord server.",
+      id: "Untuk pertanyaan lebih lanjut, silakan hubungi pengurus lewat server Discord APEX RISE.",
+      en: "For further questions, please contact the leaders on the APEX RISE Discord server.",
     },
   },
 ];
 
 const QUICK_REPLIES: Record<Lang, string[]> = {
-  id: ["Bagaimana cara gabung APX?", "Apa syaratnya?", "Kapan jadwal war?", "Di mana lihat roster?"],
-  en: ["How do I join APX?", "What are the requirements?", "When is the war schedule?", "Where can I see the roster?"],
+  id: ["Bagaimana cara gabung APEX RISE?", "Apa syaratnya?", "Kapan jadwal war?", "Di mana lihat roster?"],
+  en: ["How do I join APEX RISE?", "What are the requirements?", "When is the war schedule?", "Where can I see the roster?"],
 };
 
 const GREETING: Record<Lang, string> = {
-  id: "Halo! 👋 Aku APX Bot. Tanya apa saja soal aliansi APX, atau klik salah satu pertanyaan di bawah.",
-  en: "Hi! 👋 I'm APX Bot. Ask me anything about the APX alliance, or tap a question below.",
+  id: "Halo! 👋 Aku APEX RISE Bot. Tanya apa saja soal aliansi APEX RISE, atau klik salah satu pertanyaan di bawah.",
+  en: "Hi! 👋 I'm APEX RISE Bot. Ask me anything about the APEX RISE alliance, or tap a question below.",
 };
 
 const FALLBACK: Record<Lang, string> = {
@@ -289,7 +289,7 @@ export default function ChatBot({ lang }: { lang: Lang }) {
                 APX
               </span>
               <div className="min-w-0">
-                <p className="text-sm font-bold text-white">APX Bot</p>
+                <p className="text-sm font-bold text-white">APEX RISE Bot</p>
                 <p className="flex items-center gap-1.5 text-xs text-emerald-100">
                   <span className="h-1.5 w-1.5 rounded-full bg-emerald-200" />
                   {lang === "id" ? "Online" : "Online"}

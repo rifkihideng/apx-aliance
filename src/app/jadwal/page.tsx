@@ -9,7 +9,7 @@ import Link from "next/link";
 export const dynamic = "force-dynamic";
 export const metadata = {
   title: "Jadwal",
-  description: "Jadwal war dan event aliansi APX di Narco Empire.",
+  description: "Jadwal war dan event aliansi APEX RISE di Narco Empire.",
 };
 
 function formatDate(date: string, lang: Lang) {

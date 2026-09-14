@@ -6,7 +6,7 @@ import Reveal from "@/components/Reveal";
 export const dynamic = "force-dynamic";
 export const metadata = {
   title: "FAQ",
-  description: "Pertanyaan yang sering diajukan seputar aliansi APX.",
+  description: "Pertanyaan yang sering diajukan seputar aliansi APEX RISE.",
 };
 
 export default async function FaqPage() {

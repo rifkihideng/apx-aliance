@@ -71,7 +71,7 @@ export default function Navbar({ lang, theme }: { lang: Lang; theme: Theme }) {
             className="h-9 w-9"
             priority
           />
-          <span className="text-lg font-bold tracking-wide">APX Alliance</span>
+          <span className="text-lg font-bold tracking-wide">APEX RISE</span>
         </Link>
 
         <div className="flex items-center gap-3">

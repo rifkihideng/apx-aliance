@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import type { Lang } from "@/i18n/dictionaries";
@@ -56,12 +57,17 @@ export default function Intro({ lang }: { lang: Lang }) {
         className="absolute inset-0 bg-[radial-gradient(640px_320px_at_50%_45%,rgba(16,185,129,0.16),transparent)]"
       />
 
-      <div className="animate-fade-up flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-emerald-400 to-emerald-600 text-3xl font-black text-emerald-950 shadow-xl shadow-emerald-500/30">
-        APX
-      </div>
+      <Image
+        src="/logo-mark.svg"
+        alt="APEX RISE"
+        width={120}
+        height={120}
+        priority
+        className="animate-fade-up h-20 w-20"
+      />
 
       <p className="animate-fade-up text-xl font-black tracking-[0.2em] text-zinc-100 sm:text-2xl sm:tracking-[0.35em]">
-        APX ALLIANCE
+        APEX RISE
       </p>
 
       <div className="flex h-12 items-center overflow-hidden">

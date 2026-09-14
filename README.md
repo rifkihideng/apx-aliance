@@ -1,6 +1,6 @@
-# APX Alliance — Narco Empire
+# APEX RISE — Narco Empire
 
-Website aliansi **APX** untuk game **Narco Empire**.
+Website aliansi **APEX RISE** untuk game **Narco Empire**.
 
 ## Tech Stack
 
@@ -17,7 +17,7 @@ Website aliansi **APX** untuk game **Narco Empire**.
 - **Roster** member dengan pencarian & filter role
 - Formulir **Rekrutmen** (tersimpan ke database)
 - Halaman **Berita**, **Jadwal**, **Aturan**, dan **FAQ**
-- Chatbot (APX Bot) yang menjawab pertanyaan umum + menampilkan event terdekat dari database
+- Chatbot (APEX RISE Bot) yang menjawab pertanyaan umum + menampilkan event terdekat dari database
 - Notifikasi push untuk pengumuman & event baru
 - SEO dasar: `sitemap.xml`, `robots.txt`, Open Graph image, dan favicon
 

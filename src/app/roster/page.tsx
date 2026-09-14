@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "Roster",
-  description: "Daftar member aliansi APX di game Narco Empire.",
+  description: "Daftar member aliansi APEX RISE di game Narco Empire.",
 };
 
 export default async function RosterPage() {

@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "APX Alliance — Narco Empire";
+export const alt = "APEX RISE — Narco Empire";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -31,14 +31,14 @@ export default function Image() {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              fontSize: 52,
+              fontSize: 36,
               fontWeight: 900,
             }}
           >
-            APX
+            APEX
           </div>
           <div style={{ fontSize: 96, fontWeight: 900, letterSpacing: -2 }}>
-            APX ALLIANCE
+            APEX RISE
           </div>
         </div>
         <div style={{ marginTop: 28, fontSize: 36, color: "#a1a1aa" }}>

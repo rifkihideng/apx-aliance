@@ -6,7 +6,7 @@ self.addEventListener("push", (event) => {
     data = {};
   }
 
-  const title = data.title || "APX Alliance";
+  const title = data.title || "APEX RISE";
   const options = {
     body: data.body || "",
     data: { url: data.url || "/" },

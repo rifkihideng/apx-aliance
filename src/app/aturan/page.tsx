@@ -6,7 +6,7 @@ import Reveal from "@/components/Reveal";
 export const dynamic = "force-dynamic";
 export const metadata = {
   title: "Aturan Aliansi",
-  description: "Aturan yang wajib dipatuhi seluruh member aliansi APX.",
+  description: "Aturan yang wajib dipatuhi seluruh member aliansi APEX RISE.",
 };
 
 export default async function AturanPage() {

@@ -3,8 +3,8 @@ import { getLang } from "@/lib/lang";
 import { translate as t } from "@/i18n/dictionaries";
 
 export const metadata = {
-  title: "Gabung APX",
-  description: "Daftar menjadi member aliansi APX di game Narco Empire.",
+  title: "Gabung APEX RISE",
+  description: "Daftar menjadi member aliansi APEX RISE di game Narco Empire.",
 };
 
 export default async function RekrutPage() {

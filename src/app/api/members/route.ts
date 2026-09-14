@@ -97,8 +97,8 @@ export async function POST(request: Request) {
 
   const waLink = await getSetting("wa_group_link");
   const welcome = waLink
-    ? `Selamat datang ${ign} sebagai ${role} di APX Alliance!\nGabung grup WhatsApp: ${waLink}`
-    : `Selamat datang ${ign} sebagai ${role} di APX Alliance!`;
+    ? `Selamat datang ${ign} sebagai ${role} di APEX RISE!\nGabung grup WhatsApp: ${waLink}`
+    : `Selamat datang ${ign} sebagai ${role} di APEX RISE!`;
 
   const announcementTitle = "Member Baru Bergabung 🎉";
   const announcementSlug = await makeUniqueSlug("announcements", `${announcementTitle} ${ign}`);

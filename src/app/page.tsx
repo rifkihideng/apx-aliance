@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { dbGet } from "@/lib/db";
 import { getLang } from "@/lib/lang";
@@ -61,9 +62,9 @@ export default async function Home() {
             {tr("home.tagline")}
           </div>
           <h1 className="animate-fade-up mt-6 text-5xl font-black leading-[0.95] tracking-tight sm:text-7xl md:text-8xl">
-            APX{" "}
+            APEX{" "}
             <span className="text-gradient drop-shadow-[0_0_28px_rgba(16,185,129,0.45)]">
-              ALLIANCE
+              RISE
             </span>
           </h1>
           <p className="animate-fade-up mt-6 max-w-2xl text-lg leading-relaxed text-zinc-400">
@@ -280,34 +281,14 @@ function HeroEmblem() {
         <div className="absolute inset-8 rounded-full border border-emerald-500/20" />
         <div className="absolute inset-16 rounded-full border border-emerald-500/10" />
         <div className="absolute inset-0 flex items-center justify-center">
-          <svg viewBox="0 0 100 116" className="h-52 w-52 drop-shadow-[0_0_32px_rgba(16,185,129,0.45)]">
-            <defs>
-              <linearGradient id="apx-shield" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stopColor="#34d399" />
-                <stop offset="100%" stopColor="#047857" />
-              </linearGradient>
-            </defs>
-            <path
-              d="M50 4 L88 16 V56 C88 80 71 96 50 104 C29 96 12 80 12 56 V16 Z"
-              fill="url(#apx-shield)"
-            />
-            <path
-              d="M50 4 L88 16 V56 C88 80 71 96 50 104 C29 96 12 80 12 56 V16 Z"
-              fill="none"
-              stroke="rgba(255,255,255,0.25)"
-              strokeWidth="1.5"
-            />
-            <text
-              x="50"
-              y="58"
-              textAnchor="middle"
-              fontSize="30"
-              fontWeight="900"
-              fill="#022c22"
-            >
-              APX
-            </text>
-          </svg>
+          <Image
+            src="/logo-mark.svg"
+            alt="APEX RISE"
+            width={200}
+            height={200}
+            priority
+            className="h-48 w-48"
+          />
         </div>
       </div>
     </div>

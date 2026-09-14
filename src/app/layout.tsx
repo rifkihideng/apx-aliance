@@ -12,10 +12,10 @@ import { getSiteUrl } from "@/lib/site";
 const websiteSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
-  name: "APX Alliance",
+  name: "APEX RISE",
   url: getSiteUrl(),
   logo: `${getSiteUrl()}/logo-mark.svg`,
-  description: "Website resmi aliansi APX di game Narco Empire.",
+  description: "Website resmi aliansi APEX RISE di game Narco Empire.",
 };
 
 const geistSans = Geist({
@@ -31,10 +31,10 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(getSiteUrl()),
   title: {
-    default: "APX Alliance — Narco Empire",
-    template: "%s | APX Alliance",
+    default: "APEX RISE — Narco Empire",
+    template: "%s | APEX RISE",
   },
-  description: "Website resmi aliansi APX di game Narco Empire.",
+  description: "Website resmi aliansi APEX RISE di game Narco Empire.",
   icons: {
     icon: "/logo-mark.svg",
     apple: "/logo-mark.svg",
@@ -43,15 +43,15 @@ export const metadata: Metadata = {
     type: "website",
     locale: "id_ID",
     url: "/",
-    siteName: "APX Alliance",
-    title: "APX Alliance — Narco Empire",
-    description: "Website resmi aliansi APX di game Narco Empire.",
+    siteName: "APEX RISE",
+    title: "APEX RISE — Narco Empire",
+    description: "Website resmi aliansi APEX RISE di game Narco Empire.",
     images: ["/opengraph-image"],
   },
   twitter: {
     card: "summary_large_image",
-    title: "APX Alliance — Narco Empire",
-    description: "Website resmi aliansi APX di game Narco Empire.",
+    title: "APEX RISE — Narco Empire",
+    description: "Website resmi aliansi APEX RISE di game Narco Empire.",
   },
 };
 

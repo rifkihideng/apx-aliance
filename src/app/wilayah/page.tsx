@@ -5,8 +5,8 @@ import Reveal from "@/components/Reveal";
 
 export const dynamic = "force-dynamic";
 export const metadata = {
-  title: "Wilayah APX",
-  description: "Wilayah yang dikuasai aliansi APX di Narco Empire.",
+  title: "Wilayah APEX RISE",
+  description: "Wilayah yang dikuasai aliansi APEX RISE di Narco Empire.",
 };
 
 export default async function WilayahPage() {
