@@ -4,7 +4,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import type { ContentItem } from "@/lib/types";
 import { translate as t, type Lang } from "@/i18n/dictionaries";
 
-type Section = "faq" | "rules";
+type Section = "faq" | "rules" | "territories";
 
 type FormState = {
   id: number | null;
@@ -143,9 +143,24 @@ export default function ContentManager({ section, lang }: { section: Section; la
   const inputCls =
     "w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm text-zinc-100 placeholder-zinc-500 outline-none focus:border-emerald-400";
 
-  const title = section === "faq" ? tr("admin.content.faqTitle") : tr("admin.content.rulesTitle");
+  const isTerritory = section === "territories";
+  const title =
+    section === "faq"
+      ? tr("admin.content.faqTitle")
+      : section === "rules"
+        ? tr("admin.content.rulesTitle")
+        : tr("admin.content.territoryTitle");
   const subtitle =
-    section === "faq" ? tr("admin.content.faqSubtitle") : tr("admin.content.rulesSubtitle");
+    section === "faq"
+      ? tr("admin.content.faqSubtitle")
+      : section === "rules"
+        ? tr("admin.content.rulesSubtitle")
+        : tr("admin.content.territorySubtitle");
+
+  const labelTitleId = isTerritory ? tr("admin.content.territoryNameId") : tr("admin.content.titleId");
+  const labelTitleEn = isTerritory ? tr("admin.content.territoryNameEn") : tr("admin.content.titleEn");
+  const labelBodyId = isTerritory ? tr("admin.content.territoryDescId") : tr("admin.content.bodyId");
+  const labelBodyEn = isTerritory ? tr("admin.content.territoryDescEn") : tr("admin.content.bodyEn");
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6">
@@ -174,7 +189,7 @@ export default function ContentManager({ section, lang }: { section: Section; la
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
           <label className="block">
             <span className="mb-1 block text-sm font-medium text-zinc-300">
-              {tr("admin.content.titleId")}
+              {labelTitleId}
             </span>
             <input
               className={inputCls}
@@ -185,7 +200,7 @@ export default function ContentManager({ section, lang }: { section: Section; la
           </label>
           <label className="block">
             <span className="mb-1 block text-sm font-medium text-zinc-300">
-              {tr("admin.content.titleEn")}
+              {labelTitleEn}
             </span>
             <input
               className={inputCls}
@@ -195,7 +210,7 @@ export default function ContentManager({ section, lang }: { section: Section; la
           </label>
           <label className="block">
             <span className="mb-1 block text-sm font-medium text-zinc-300">
-              {tr("admin.content.bodyId")}
+              {labelBodyId}
             </span>
             <textarea
               className={inputCls}
@@ -206,7 +221,7 @@ export default function ContentManager({ section, lang }: { section: Section; la
           </label>
           <label className="block">
             <span className="mb-1 block text-sm font-medium text-zinc-300">
-              {tr("admin.content.bodyEn")}
+              {labelBodyEn}
             </span>
             <textarea
               className={inputCls}

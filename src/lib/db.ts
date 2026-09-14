@@ -376,9 +376,6 @@ async function seedExtras(db: Client) {
 }
 
 async function seedContent(db: Client) {
-  const count = await db.execute("SELECT COUNT(*) AS c FROM site_content");
-  if (Number(count.rows[0].c) > 0) return;
-
   const rows: {
     section: string;
     position: number;
@@ -388,26 +385,49 @@ async function seedContent(db: Client) {
     body_en: string;
   }[] = [];
 
-  for (let i = 1; i <= 6; i++) {
-    rows.push({
-      section: "faq",
-      position: i,
-      title_id: dictionaries.id[`faq.q${i}`] ?? "",
-      title_en: dictionaries.en[`faq.q${i}`] ?? "",
-      body_id: dictionaries.id[`faq.a${i}`] ?? "",
-      body_en: dictionaries.en[`faq.a${i}`] ?? "",
-    });
+  // FAQ & aturan: hanya di-seed saat tabel konten masih kosong (deploy pertama).
+  const total = await db.execute("SELECT COUNT(*) AS c FROM site_content");
+  if (Number(total.rows[0].c) === 0) {
+    for (let i = 1; i <= 6; i++) {
+      rows.push({
+        section: "faq",
+        position: i,
+        title_id: dictionaries.id[`faq.q${i}`] ?? "",
+        title_en: dictionaries.en[`faq.q${i}`] ?? "",
+        body_id: dictionaries.id[`faq.a${i}`] ?? "",
+        body_en: dictionaries.en[`faq.a${i}`] ?? "",
+      });
+    }
+    for (let i = 1; i <= 6; i++) {
+      rows.push({
+        section: "rules",
+        position: i,
+        title_id: dictionaries.id[`rules.${i}.title`] ?? "",
+        title_en: dictionaries.en[`rules.${i}.title`] ?? "",
+        body_id: dictionaries.id[`rules.${i}.desc`] ?? "",
+        body_en: dictionaries.en[`rules.${i}.desc`] ?? "",
+      });
+    }
   }
-  for (let i = 1; i <= 6; i++) {
-    rows.push({
-      section: "rules",
-      position: i,
-      title_id: dictionaries.id[`rules.${i}.title`] ?? "",
-      title_en: dictionaries.en[`rules.${i}.title`] ?? "",
-      body_id: dictionaries.id[`rules.${i}.desc`] ?? "",
-      body_en: dictionaries.en[`rules.${i}.desc`] ?? "",
-    });
+
+  // Wilayah: di-seed bila section-nya masih kosong (termasuk deploy lama).
+  const terr = await db.execute(
+    "SELECT COUNT(*) AS c FROM site_content WHERE section = 'territories'"
+  );
+  if (Number(terr.rows[0].c) === 0) {
+    for (let i = 1; i <= 6; i++) {
+      rows.push({
+        section: "territories",
+        position: i,
+        title_id: dictionaries.id[`territory.${i}.name`] ?? "",
+        title_en: dictionaries.en[`territory.${i}.name`] ?? "",
+        body_id: dictionaries.id[`territory.${i}.desc`] ?? "",
+        body_en: dictionaries.en[`territory.${i}.desc`] ?? "",
+      });
+    }
   }
+
+  if (rows.length === 0) return;
 
   const createdAt = new Date().toISOString();
   await db.batch(

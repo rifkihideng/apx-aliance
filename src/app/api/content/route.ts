@@ -3,7 +3,7 @@ import { dbAll, dbGet, dbRun } from "@/lib/db";
 import { isAdminRequest } from "@/lib/admin-server";
 import { normalizeKey, normalizeNullable, normalizeText } from "@/lib/normalize";
 
-const VALID_SECTIONS = ["faq", "rules"] as const;
+const VALID_SECTIONS = ["faq", "rules", "territories"] as const;
 type Section = (typeof VALID_SECTIONS)[number];
 
 function parseSection(value: unknown): Section | null {

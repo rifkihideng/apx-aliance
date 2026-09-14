@@ -10,7 +10,7 @@ export type ResolvedContent = { id: number; title: string; body: string };
  * dari kamus i18n sebagai fallback.
  */
 export async function getContent(
-  section: "faq" | "rules",
+  section: "faq" | "rules" | "territories",
   lang: Lang
 ): Promise<ResolvedContent[]> {
   const rows = await dbAll<ContentItem>(
@@ -34,9 +34,17 @@ export async function getContent(
     }));
   }
 
+  if (section === "rules") {
+    return Array.from({ length: 6 }, (_, i) => ({
+      id: i + 1,
+      title: dictionaries[lang][`rules.${i + 1}.title`] ?? "",
+      body: dictionaries[lang][`rules.${i + 1}.desc`] ?? "",
+    }));
+  }
+
   return Array.from({ length: 6 }, (_, i) => ({
     id: i + 1,
-    title: dictionaries[lang][`rules.${i + 1}.title`] ?? "",
-    body: dictionaries[lang][`rules.${i + 1}.desc`] ?? "",
+    title: dictionaries[lang][`territory.${i + 1}.name`] ?? "",
+    body: dictionaries[lang][`territory.${i + 1}.desc`] ?? "",
   }));
 }

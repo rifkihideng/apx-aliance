@@ -12,6 +12,7 @@ const links = [
   { href: "/admin/jadwal", key: "admin.nav.schedule" },
   { href: "/admin/faq", key: "admin.nav.faq" },
   { href: "/admin/aturan", key: "admin.nav.rules" },
+  { href: "/admin/wilayah", key: "admin.nav.territories" },
 ];
 
 export default function AdminNav({ lang }: { lang: Lang }) {

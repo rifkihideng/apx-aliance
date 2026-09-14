@@ -16,7 +16,7 @@ function toDate(value: string | null | undefined): Date {
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = getSiteUrl();
   const now = new Date();
-  const routes = ["", "/roster", "/rekrut", "/berita", "/jadwal", "/aturan", "/faq"];
+  const routes = ["", "/roster", "/rekrut", "/berita", "/jadwal", "/aturan", "/wilayah", "/faq"];
 
   const entries: MetadataRoute.Sitemap = routes.map((route) => ({
     url: `${base}${route}`,
