@@ -24,8 +24,15 @@ export default async function WilayahPage() {
           <Reveal key={item.id} delay={i * 60}>
             <div className="card-lift h-full rounded-xl border border-zinc-800 bg-zinc-900/50 p-5">
               <div className="flex items-center justify-between">
-                <span className="text-2xl" aria-hidden="true">
-                  📍
+                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-600 shadow-lg shadow-emerald-500/30">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    aria-hidden="true"
+                    className="h-5 w-5 text-emerald-950"
+                  >
+                    <path d="M11.54 22.351l.07.04.028.016a.76.76 0 00.723 0l.028-.015.071-.041a16.975 16.975 0 001.144-.742 19.58 19.58 0 002.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 00-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 002.682 2.282 16.975 16.975 0 001.145.742zM12 13.5a3 3 0 100-6 3 3 0 000 6z" />
+                  </svg>
                 </span>
                 <span className="rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-400">
                   {tr("wilayah.badge")}
