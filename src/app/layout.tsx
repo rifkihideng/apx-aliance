@@ -14,7 +14,7 @@ const websiteSchema = {
   "@type": "Organization",
   name: "APX Alliance",
   url: getSiteUrl(),
-  logo: `${getSiteUrl()}/icon.svg`,
+  logo: `${getSiteUrl()}/logo-mark.svg`,
   description: "Website resmi aliansi APX di game Narco Empire.",
 };
 
@@ -36,8 +36,8 @@ export const metadata: Metadata = {
   },
   description: "Website resmi aliansi APX di game Narco Empire.",
   icons: {
-    icon: "/icon.svg",
-    apple: "/icon.svg",
+    icon: "/logo-mark.svg",
+    apple: "/logo-mark.svg",
   },
   openGraph: {
     type: "website",

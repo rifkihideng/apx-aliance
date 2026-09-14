@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { translate as t, type Lang } from "@/i18n/dictionaries";
 
@@ -32,12 +33,13 @@ export default function Footer({ lang }: { lang: Lang }) {
       <div className="relative mx-auto max-w-6xl px-4 py-14 sm:px-6">
         <div className="grid gap-10 md:grid-cols-3 lg:grid-cols-4">
           <div className="md:col-span-3 lg:col-span-2">
-            <div className="flex items-center gap-2">
-              <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-400 to-emerald-600 font-black text-emerald-950 shadow-lg shadow-emerald-500/30">
-                APX
-              </span>
-              <span className="text-lg font-bold tracking-wide">APX Alliance</span>
-            </div>
+            <Image
+              src="/logo.svg"
+              alt="APEX RISE"
+              width={240}
+              height={200}
+              className="h-16 w-auto"
+            />
             <p className="mt-3 max-w-sm text-sm leading-relaxed text-zinc-400">
               {t(lang, "footer.tagline")}
             </p>

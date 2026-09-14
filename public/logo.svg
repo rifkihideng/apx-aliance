@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 200">
+  <defs>
+    <linearGradient id="gSilver" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f8fafc"/>
+      <stop offset="0.45" stop-color="#cbd5e1"/>
+      <stop offset="1" stop-color="#64748b"/>
+    </linearGradient>
+    <linearGradient id="gGold" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fde68a"/>
+      <stop offset="0.5" stop-color="#d4a017"/>
+      <stop offset="1" stop-color="#a16207"/>
+    </linearGradient>
+    <filter id="drop" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#000000" flood-opacity="0.45"/>
+    </filter>
+  </defs>
+
+  <g transform="translate(70,2)" filter="url(#drop)">
+    <path d="M30 32 A20 20 0 0 1 70 32" fill="none" stroke="url(#gGold)" stroke-width="2" stroke-linecap="round"/>
+    <path d="M35 30 L16 50 L28 53 L42 36 Z" fill="url(#gSilver)"/>
+    <path d="M65 30 L84 50 L72 53 L58 36 Z" fill="url(#gSilver)"/>
+    <path d="M50 16 L73 64 L61 64 L50 41 L39 64 L27 64 Z" fill="url(#gSilver)"/>
+    <path d="M50 28 L65 57 L58 57 L50 41 L42 57 L35 57 Z" fill="url(#gGold)"/>
+  </g>
+
+  <g filter="url(#drop)">
+    <text x="120" y="132" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="38" font-weight="900" letter-spacing="6" fill="url(#gSilver)">APEX</text>
+    <line x1="68" y1="154" x2="102" y2="154" stroke="url(#gGold)" stroke-width="2" stroke-linecap="round"/>
+    <line x1="138" y1="154" x2="172" y2="154" stroke="url(#gGold)" stroke-width="2" stroke-linecap="round"/>
+    <text x="120" y="170" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" letter-spacing="10" fill="url(#gGold)">RISE</text>
+  </g>
+</svg>

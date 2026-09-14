@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
@@ -62,9 +63,14 @@ export default function Navbar({ lang, theme }: { lang: Lang; theme: Theme }) {
     >
       <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
         <Link href="/" className="flex items-center gap-2">
-          <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-400 to-emerald-600 font-black text-emerald-950 shadow-lg shadow-emerald-500/30">
-            APX
-          </span>
+          <Image
+            src="/logo-mark.svg"
+            alt="APEX RISE"
+            width={120}
+            height={120}
+            className="h-9 w-9"
+            priority
+          />
           <span className="text-lg font-bold tracking-wide">APX Alliance</span>
         </Link>
 
