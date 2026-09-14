@@ -51,7 +51,8 @@ export default async function Home() {
           aria-hidden="true"
           className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-emerald-400/60 to-transparent"
         />
-        <div className="relative mx-auto max-w-6xl px-4 py-24 sm:px-6 sm:py-32">
+        <div className="relative mx-auto grid max-w-6xl items-center gap-14 px-4 py-24 sm:px-6 sm:py-32 lg:grid-cols-2">
+          <div>
           <div className="animate-fade-up inline-flex items-center gap-2.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-emerald-300">
             <span className="relative flex h-2 w-2">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
@@ -82,6 +83,9 @@ export default async function Home() {
               {tr("home.roster")} →
             </Link>
           </div>
+          </div>
+
+          <HeroEmblem />
         </div>
 
         <div className="pointer-events-none absolute bottom-6 left-1/2 hidden -translate-x-1/2 sm:block">
@@ -264,5 +268,48 @@ function HeartIcon() {
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={iconCls}>
       <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
     </svg>
+  );
+}
+
+function HeroEmblem() {
+  return (
+    <div className="relative hidden lg:block" aria-hidden="true">
+      <div className="relative mx-auto aspect-square w-full max-w-md">
+        <div className="absolute inset-0 rounded-full bg-emerald-500/15 blur-3xl" />
+        <div className="absolute inset-0 animate-[spin_30s_linear_infinite] rounded-full border border-dashed border-emerald-500/30" />
+        <div className="absolute inset-8 rounded-full border border-emerald-500/20" />
+        <div className="absolute inset-16 rounded-full border border-emerald-500/10" />
+        <div className="absolute inset-0 flex items-center justify-center">
+          <svg viewBox="0 0 100 116" className="h-52 w-52 drop-shadow-[0_0_32px_rgba(16,185,129,0.45)]">
+            <defs>
+              <linearGradient id="apx-shield" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stopColor="#34d399" />
+                <stop offset="100%" stopColor="#047857" />
+              </linearGradient>
+            </defs>
+            <path
+              d="M50 4 L88 16 V56 C88 80 71 96 50 104 C29 96 12 80 12 56 V16 Z"
+              fill="url(#apx-shield)"
+            />
+            <path
+              d="M50 4 L88 16 V56 C88 80 71 96 50 104 C29 96 12 80 12 56 V16 Z"
+              fill="none"
+              stroke="rgba(255,255,255,0.25)"
+              strokeWidth="1.5"
+            />
+            <text
+              x="50"
+              y="58"
+              textAnchor="middle"
+              fontSize="30"
+              fontWeight="900"
+              fill="#022c22"
+            >
+              APX
+            </text>
+          </svg>
+        </div>
+      </div>
+    </div>
   );
 }

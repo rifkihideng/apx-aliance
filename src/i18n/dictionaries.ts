@@ -18,6 +18,10 @@ export const dictionaries: Record<Lang, Dict> = {
     "nav.openMenu": "Buka menu",
 
     "footer.disclaimer": "Website aliansi ini tidak berafiliasi resmi dengan pengembang game.",
+    "footer.tagline": "Aliansi elit di Narco Empire — solidaritas, strategi, dan dominasi.",
+    "footer.nav": "Navigasi",
+    "footer.info": "Info",
+    "footer.rights": "Hak cipta dilindungi.",
 
     "common.loading": "Memuat...",
     "error.title": "Terjadi Kesalahan",
@@ -336,6 +340,10 @@ export const dictionaries: Record<Lang, Dict> = {
     "nav.openMenu": "Open menu",
 
     "footer.disclaimer": "This alliance website is not officially affiliated with the game developer.",
+    "footer.tagline": "An elite alliance in Narco Empire — solidarity, strategy, and dominance.",
+    "footer.nav": "Navigation",
+    "footer.info": "Info",
+    "footer.rights": "All rights reserved.",
 
     "common.loading": "Loading...",
     "error.title": "Something Went Wrong",
