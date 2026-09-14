@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { dbGet } from "@/lib/db";
 import { getLang } from "@/lib/lang";
+import { requireAdmin } from "@/lib/admin-server";
 import { translate as t } from "@/i18n/dictionaries";
 import AdminShell from "@/components/AdminShell";
 import ApplicationsManager from "@/components/ApplicationsManager";
@@ -13,6 +14,7 @@ export const metadata = {
 };
 
 export default async function AdminPage() {
+  await requireAdmin();
   const lang = await getLang();
   const tr = (key: string) => t(lang, key);
 

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import MemberManager from "@/components/MemberManager";
 import AdminShell from "@/components/AdminShell";
 import { getLang } from "@/lib/lang";
+import { requireAdmin } from "@/lib/admin-server";
 import { translate as t } from "@/i18n/dictionaries";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -10,6 +11,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function AdminMemberPage() {
+  await requireAdmin();
   const lang = await getLang();
   return (
     <AdminShell>
