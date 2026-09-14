@@ -2,6 +2,7 @@ import Link from "next/link";
 import { dbGet } from "@/lib/db";
 import { getLang } from "@/lib/lang";
 import { requireAdmin } from "@/lib/admin-server";
+import { getMonthlyStats, type MonthlyStat } from "@/lib/stats";
 import { translate as t } from "@/i18n/dictionaries";
 import AdminShell from "@/components/AdminShell";
 import ApplicationsManager from "@/components/ApplicationsManager";
@@ -28,6 +29,8 @@ export default async function AdminPage() {
   ]);
   const [totalMembers, activeMembers, pendingApps, totalNews, totalEvents, pushSubs] =
     counts.map((r) => r?.c ?? 0);
+
+  const stats = await getMonthlyStats(lang);
 
   return (
     <AdminShell>
@@ -65,6 +68,19 @@ export default async function AdminPage() {
           </Link>
         </div>
 
+        <h2 className="mt-10 text-xl font-bold">{tr("admin.dashboard.chartTitle")}</h2>
+        <p className="mt-1 text-sm text-zinc-400">{tr("admin.dashboard.chartSubtitle")}</p>
+        <div className="card-lift mt-4 rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
+          <StatsChart
+            stats={stats}
+            labels={{
+              members: tr("admin.dashboard.chart.members"),
+              applications: tr("admin.dashboard.chart.applications"),
+              events: tr("admin.dashboard.chart.events"),
+            }}
+          />
+        </div>
+
         <WaLinkSettings lang={lang} />
 
         <h2 className="mt-10 text-xl font-bold">{tr("admin.dashboard.applications")}</h2>
@@ -83,5 +99,83 @@ function StatCard({ label, value }: { label: string; value: number }) {
       <p className="text-3xl font-black text-emerald-400">{value}</p>
       <p className="mt-1 text-sm text-zinc-400">{label}</p>
     </div>
+  );
+}
+
+function StatsChart({
+  stats,
+  labels,
+}: {
+  stats: MonthlyStat[];
+  labels: { members: string; applications: string; events: string };
+}) {
+  const max = Math.max(1, ...stats.flatMap((s) => [s.members, s.applications, s.events]));
+
+  return (
+    <div>
+      <div className="flex items-end gap-3">
+        {stats.map((s) => (
+          <div key={s.label} className="flex min-w-0 flex-1 flex-col items-center gap-2">
+            <div className="flex h-40 w-full items-end justify-center gap-1">
+              <Bar
+                value={s.members}
+                max={max}
+                className="bg-emerald-500/80 hover:bg-emerald-400"
+                title={`${labels.members}: ${s.members}`}
+              />
+              <Bar
+                value={s.applications}
+                max={max}
+                className="bg-sky-500/80 hover:bg-sky-400"
+                title={`${labels.applications}: ${s.applications}`}
+              />
+              <Bar
+                value={s.events}
+                max={max}
+                className="bg-amber-500/80 hover:bg-amber-400"
+                title={`${labels.events}: ${s.events}`}
+              />
+            </div>
+            <span className="truncate text-xs text-zinc-400">{s.label}</span>
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-xs text-zinc-400">
+        <Legend color="bg-emerald-500" label={labels.members} />
+        <Legend color="bg-sky-500" label={labels.applications} />
+        <Legend color="bg-amber-500" label={labels.events} />
+      </div>
+    </div>
+  );
+}
+
+function Bar({
+  value,
+  max,
+  className,
+  title,
+}: {
+  value: number;
+  max: number;
+  className: string;
+  title: string;
+}) {
+  const height = value > 0 ? Math.max(4, Math.round((value / max) * 150)) : 0;
+  return (
+    <div
+      title={title}
+      className={`${className} flex-1 rounded-t transition-colors`}
+      style={{ height }}
+    />
+  );
+}
+
+function Legend({ color, label }: { color: string; label: string }) {
+  return (
+    <span className="inline-flex items-center gap-1.5">
+      <span className={`h-3 w-3 rounded-sm ${color}`} />
+      {label}
+    </span>
   );
 }

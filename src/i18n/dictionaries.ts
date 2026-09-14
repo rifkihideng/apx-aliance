@@ -151,6 +151,11 @@ export const dictionaries: Record<Lang, Dict> = {
     "admin.dashboard.manageSchedule": "Kelola Jadwal",
     "admin.dashboard.applications": "Daftar Pendaftar",
     "admin.dashboard.applicationsDesc": "Terima atau tolak pendaftaran member.",
+    "admin.dashboard.chartTitle": "Statistik Bulanan",
+    "admin.dashboard.chartSubtitle": "Member baru, pendaftar, dan event dalam 6 bulan terakhir.",
+    "admin.dashboard.chart.members": "Member baru",
+    "admin.dashboard.chart.applications": "Pendaftar",
+    "admin.dashboard.chart.events": "Event",
 
     "admin.member.title": "Kelola Member",
     "admin.member.subtitle": "Tambah, edit, atau hapus member aliansi APX.",
@@ -439,6 +444,11 @@ export const dictionaries: Record<Lang, Dict> = {
     "admin.dashboard.manageSchedule": "Manage Schedule",
     "admin.dashboard.applications": "Applications",
     "admin.dashboard.applicationsDesc": "Accept or reject member applications.",
+    "admin.dashboard.chartTitle": "Monthly Statistics",
+    "admin.dashboard.chartSubtitle": "New members, applications, and events over the last 6 months.",
+    "admin.dashboard.chart.members": "New members",
+    "admin.dashboard.chart.applications": "Applications",
+    "admin.dashboard.chart.events": "Events",
 
     "admin.member.title": "Manage Members",
     "admin.member.subtitle": "Add, edit, or remove APX alliance members.",

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { translate as t, type Lang } from "@/i18n/dictionaries";
 
 type FieldProps = {
@@ -31,6 +31,11 @@ export default function RecruitmentForm({ lang }: { lang: Lang }) {
   const tr = (key: string) => t(lang, key);
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [error, setError] = useState("");
+  const tsRef = useRef(0);
+
+  useEffect(() => {
+    tsRef.current = Date.now();
+  }, []);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -49,6 +54,7 @@ export default function RecruitmentForm({ lang }: { lang: Lang }) {
           level: data.get("level"),
           discord: data.get("discord"),
           alasan: data.get("alasan"),
+          ts: tsRef.current,
         }),
       });
       const json = await res.json();
@@ -74,6 +80,14 @@ export default function RecruitmentForm({ lang }: { lang: Lang }) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      {/* Honeypot anti-spam: tidak terlihat oleh manusia, hanya diisi bot. */}
+      <div className="absolute -left-[9999px] top-auto" aria-hidden="true">
+        <label>
+          Jangan diisi
+          <input type="text" name="website" tabIndex={-1} autoComplete="off" />
+        </label>
+      </div>
+
       <Field label={tr("form.ign")} name="ign" placeholder={tr("form.ignPh")} required />
       <Field label={tr("form.level")} name="level" type="number" placeholder={tr("form.levelPh")} />
       <Field label={tr("form.discord")} name="discord" placeholder={tr("form.discordPh")} />

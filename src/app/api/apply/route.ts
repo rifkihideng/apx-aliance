@@ -26,6 +26,27 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: "Body JSON tidak valid." }, { status: 400 });
   }
 
+  // Honeypot: bot yang mengisi kolom tersembunyi di-drop diam-diam (dianggap sukses).
+  const honeypot =
+    typeof body.website === "string"
+      ? body.website
+      : typeof body.company === "string"
+        ? body.company
+        : "";
+  if (honeypot.trim() !== "") {
+    return NextResponse.json({ ok: true, id: 0 });
+  }
+
+  // Kiriman kilat (< 3 detik setelah form dimuat) dianggap bot.
+  const submittedAt = typeof body.ts === "number" ? body.ts : NaN;
+  const elapsed = Date.now() - submittedAt;
+  if (!Number.isFinite(elapsed) || elapsed < 3000) {
+    return NextResponse.json(
+      { ok: false, error: "Terlalu cepat. Silakan isi formulir lalu coba lagi." },
+      { status: 429 }
+    );
+  }
+
   const ign = normalizeText(body.ign);
   const discord = normalizeDiscord(body.discord);
   const alasan = normalizeMultiline(body.alasan);
