@@ -79,7 +79,7 @@ export default function CommentSection({
   }
 
   const inputCls =
-    "w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm text-zinc-100 placeholder-zinc-500 outline-none focus:border-emerald-400";
+    "w-full rounded-xl border border-zinc-700/70 bg-zinc-950/60 px-3.5 py-2.5 text-sm text-zinc-100 placeholder-zinc-500 outline-none transition-all duration-200 hover:border-zinc-600/70 focus:border-emerald-400/80 focus:bg-zinc-950 focus:ring-4 focus:ring-emerald-500/10";
 
   return (
     <section className="card-lift mt-8 rounded-xl border border-zinc-800 bg-zinc-900/50 p-6 sm:p-8">
