@@ -126,6 +126,7 @@ export const dictionaries: Record<Lang, Dict> = {
     "news.comments.submit": "Kirim",
     "news.comments.sending": "Mengirim...",
     "news.comments.sent": "Komentar terkirim! Menunggu moderasi.",
+    "news.comments.posted": "Komentar terkirim!",
     "news.comments.error": "Gagal mengirim komentar.",
     "news.comments.modNote": "Komentar akan dimoderasi sebelum tampil.",
 
@@ -497,6 +498,7 @@ export const dictionaries: Record<Lang, Dict> = {
     "news.comments.submit": "Send",
     "news.comments.sending": "Sending...",
     "news.comments.sent": "Comment sent! Pending moderation.",
+    "news.comments.posted": "Comment posted!",
     "news.comments.error": "Failed to send comment.",
     "news.comments.modNote": "Comments are moderated before appearing.",
 

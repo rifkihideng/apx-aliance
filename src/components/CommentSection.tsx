@@ -23,6 +23,7 @@ export default function CommentSection({
   const [loading, setLoading] = useState(true);
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [error, setError] = useState("");
+  const [pending, setPending] = useState(true);
   const tsRef = useRef(0);
 
   useEffect(() => {
@@ -63,7 +64,14 @@ export default function CommentSection({
         throw new Error(json.error ?? tr("news.comments.error"));
       }
       setStatus("success");
+      setPending(json.pending === true);
       form.reset();
+      if (json.pending !== true) {
+        const fresh = await fetch(`/api/announcements/${announcementId}/comments`);
+        const freshJson = await fresh.json();
+        if (freshJson.ok) setComments(freshJson.comments);
+        setLoading(false);
+      }
     } catch (err) {
       setStatus("error");
       setError(err instanceof Error ? err.message : tr("news.comments.error"));
@@ -131,7 +139,9 @@ export default function CommentSection({
         </label>
 
         {status === "success" && (
-          <p className="text-sm text-emerald-400">{tr("news.comments.sent")}</p>
+          <p className="text-sm text-emerald-400">
+            {pending ? tr("news.comments.sent") : tr("news.comments.posted")}
+          </p>
         )}
         {status === "error" && <p className="text-sm text-red-400">{error}</p>}
 

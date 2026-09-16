@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { dbAll, dbGet, dbRun } from "@/lib/db";
 import { getClientIp, rateLimit } from "@/lib/rate-limit";
 import { normalizeMultiline, normalizeText } from "@/lib/normalize";
+import { containsBadWords } from "@/lib/moderation";
 
 type RouteContext = { params: Promise<{ id: string }> };
 
@@ -71,12 +72,16 @@ export async function POST(request: Request, { params }: RouteContext) {
     return NextResponse.json({ ok: false, error: "Komentar wajib diisi." }, { status: 400 });
   }
 
+  // Komentar kasar ditahan untuk moderasi (approved = 0), sisanya langsung tampil.
+  const approved = containsBadWords(name, message) ? 0 : 1;
+
   const info = await dbRun(
-    "INSERT INTO comments (announcement_id, name, message) VALUES (?, ?, ?)",
+    "INSERT INTO comments (announcement_id, name, message, approved) VALUES (?, ?, ?, ?)",
     id,
     name,
-    message
+    message,
+    approved
   );
 
-  return NextResponse.json({ ok: true, id: info.lastInsertRowid });
+  return NextResponse.json({ ok: true, id: info.lastInsertRowid, pending: approved === 0 });
 }
