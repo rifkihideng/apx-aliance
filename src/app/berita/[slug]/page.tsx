@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { dbGet } from "@/lib/db";
 import { getLang } from "@/lib/lang";
 import { translate as t } from "@/i18n/dictionaries";
+import CommentSection from "@/components/CommentSection";
 
 export const dynamic = "force-dynamic";
 
@@ -53,6 +54,8 @@ export default async function BeritaDetailPage({ params }: PageProps) {
           {post.content}
         </p>
       </article>
+
+      <CommentSection announcementId={post.id} lang={lang} />
     </div>
   );
 }

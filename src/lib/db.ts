@@ -195,6 +195,22 @@ const SCHEMA = [
     created_at TEXT,
     updated_at TEXT
   )`,
+  `CREATE TABLE IF NOT EXISTS comments (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    announcement_id INTEGER NOT NULL,
+    name TEXT NOT NULL,
+    message TEXT NOT NULL,
+    approved INTEGER NOT NULL DEFAULT 0,
+    created_at TEXT NOT NULL DEFAULT (datetime('now', 'localtime'))
+  )`,
+  `CREATE TABLE IF NOT EXISTS event_checkins (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    event_id INTEGER NOT NULL,
+    name TEXT NOT NULL,
+    name_key TEXT NOT NULL,
+    discord TEXT,
+    created_at TEXT NOT NULL DEFAULT (datetime('now', 'localtime'))
+  )`,
 ];
 
 /**
@@ -474,6 +490,9 @@ const INDEXES = [
   `CREATE INDEX IF NOT EXISTS idx_applications_status ON applications(status)`,
   `CREATE INDEX IF NOT EXISTS idx_push_subscriptions_endpoint ON push_subscriptions(endpoint)`,
   `CREATE INDEX IF NOT EXISTS idx_site_content_section ON site_content(section, position)`,
+  `CREATE INDEX IF NOT EXISTS idx_comments_announcement ON comments(announcement_id, approved)`,
+  `CREATE UNIQUE INDEX IF NOT EXISTS ux_event_checkins_event_name ON event_checkins(event_id, name_key)`,
+  `CREATE INDEX IF NOT EXISTS idx_event_checkins_event ON event_checkins(event_id)`,
 ];
 
 /**

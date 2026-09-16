@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import EventManager from "@/components/EventManager";
+import CheckInManager from "@/components/CheckInManager";
 import AdminShell from "@/components/AdminShell";
 import { getLang } from "@/lib/lang";
 import { requireAdmin } from "@/lib/admin-server";
@@ -16,6 +17,7 @@ export default async function AdminJadwalPage() {
   return (
     <AdminShell>
       <EventManager lang={lang} />
+      <CheckInManager lang={lang} />
     </AdminShell>
   );
 }

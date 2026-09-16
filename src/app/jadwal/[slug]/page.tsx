@@ -5,6 +5,7 @@ import { dbGet } from "@/lib/db";
 import { getLang } from "@/lib/lang";
 import { translate as t, monthNames, type Lang } from "@/i18n/dictionaries";
 import { formatTimeZones } from "@/lib/time";
+import CheckInSection from "@/components/CheckInSection";
 
 export const dynamic = "force-dynamic";
 
@@ -82,6 +83,8 @@ export default async function JadwalDetailPage({ params }: PageProps) {
           </p>
         )}
       </article>
+
+      <CheckInSection eventId={event.id} lang={lang} />
     </div>
   );
 }
